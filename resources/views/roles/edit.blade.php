@@ -1,5 +1,17 @@
-@extends('layouts.app')
+@extends('adminlte::page')
 
+@section('title', 'Dashboard')
+
+
+@section('css')
+<link rel="stylesheet" href="/css/admin_custom.css">
+@stop
+
+@section('js')
+<script>
+    console.log('Hi!'); 
+</script>
+@stop
 
 @section('content')
 <div class="row">
@@ -7,9 +19,7 @@
         <div class="pull-left">
             <h2>Edit Role</h2>
         </div>
-        <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
-        </div>
+        
     </div>
 </div>
 
@@ -46,8 +56,12 @@
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
+ 
+        
+    
 </div>
 {!! Form::close() !!}
 

@@ -14,6 +14,7 @@
             <a class="btn btn-success" href="{{ route('users.create') }}"> Create New User</a>
           @endcan
         </div>
+        <br>
     </div>
 </div>
 

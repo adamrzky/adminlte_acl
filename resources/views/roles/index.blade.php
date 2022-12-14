@@ -2,10 +2,6 @@
 
 @section('title', 'Dashboard')
 
-@section('content_header')
-<h1>Dashboard</h1>
-@stop
-
 @section('content')
 
 
@@ -20,6 +16,7 @@
             <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a>
             @endcan
         </div>
+        <br>
     </div>
 </div>
 

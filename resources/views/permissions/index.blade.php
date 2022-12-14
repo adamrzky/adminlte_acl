@@ -15,6 +15,7 @@
                 <a class="btn btn-success" href="{{ route('permissions.create') }}"> Create New Permission</a>
                 @endcan
             </div>
+            <br>
         </div>
     </div>
 
