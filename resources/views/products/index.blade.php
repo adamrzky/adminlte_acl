@@ -54,7 +54,7 @@
                     <a class="btn btn-info" href="{{ route('products.show',$product->id) }}">Show</a>
                     
                     @can('product-edit')
-                    <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('products.edit', Crypt::encrypt($product->id)) }}">Edit</a>
                     @endcan
 
                    
@@ -64,7 +64,8 @@
                     <button type="submit" class="btn btn-danger">Delete</button>
                     @endcan
                     @can('product-broadcast')
-                    <a class="btn btn-link" href="{{ route('products.broadcast',$product->id) }}">Broadcast</a>
+                    {{-- <a class="btn btn-link" href="{{ route('products.broadcast',$product->id) }}">Broadcast</a> --}}
+                    <a class="btn btn-link" href="{{ route('products.broadcast', Crypt::encrypt($product->id)) }}">Broadcast</a>
                     @endcan
                    
             <td>

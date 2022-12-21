@@ -25,9 +25,19 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
-    Route::resource('products','ProductController');
+    // Route::resource('products','ProductController');
     Route::resource('permissions', 'PermissionController');
 
-    // Route::get('/products/broadcast/{product}' , [ProductController::class, 'broadcast'])->name('products.broadcast');
-    Route::get('/products/broadcast/{product}', 'ProductController@broadcast')->name('products.broadcast');;
+    //Product
+    Route::get('/products', 'ProductController@index')->name('products.index');
+    Route::get('/products/broadcast/{id}', 'ProductController@broadcast')->name('products.broadcast');
+    Route::get('/products/show/{product}', 'ProductController@show')->name('products.show');
+    Route::get('/products/{id}/edit', 'ProductController@edit')->name('products.edit');
+    Route::get('/products/create', 'ProductController@create')->name('products.create');
+    Route::put('/products/update/{product}', 'ProductController@update')->name('products.update');
+    Route::post('/products/store', 'ProductController@store')->name('products.store');
+    Route::delete('/products/{product}/destroy', 'ProductController@destroy')->name('products.destroy');
+
+
+
 });
