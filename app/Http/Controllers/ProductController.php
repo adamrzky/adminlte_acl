@@ -49,7 +49,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
         request()->validate([
             'name' => 'required',
@@ -69,17 +69,19 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
-    {
-        return view('products.show',compact('product'));
-    }
-
-    public function broadcast(Product $product, $id)
+    public function show(Product $product, $id)
     {
         $id = Crypt::decrypt($id);
         $product = Product::where('id', $id)->first();
         return view('products.show', compact('product'));
     }
+
+    // public function broadcast(Product $product, $id)
+    // {
+    //     $id = Crypt::decrypt($id);
+    //     $product = Product::where('id', $id)->first();
+    //     return view('products.show', compact('product'));
+    // }
     
     /**
      * Show the form for editing the specified resource.
