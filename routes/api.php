@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::group(['middleware' => ['cors']], function () {
+    //
+    Route::post('/register', 'Api\AuthController@register');
+    Route::post('/gettoken', 'Api\AuthController@getToken');
+
+    Route::group(['middleware' => ['check.auth']], function () {
+        Route::get('/product', 'Api\ProductController@index')->name('api.product');
+    });
+
 });
