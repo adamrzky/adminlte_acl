@@ -8,6 +8,7 @@ use App\User;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
+use Illuminate\Support\Facades\Crypt;
     
 class UserController extends Controller
 {
@@ -79,7 +80,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
+    {   
+        $id = Crypt::decrypt($id);
         $user = User::find($id);
         return view('users.show',compact('user'));
     }
@@ -92,6 +94,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $id = Crypt::decrypt($id);
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();

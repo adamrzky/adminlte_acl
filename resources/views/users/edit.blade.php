@@ -1,4 +1,3 @@
-@extends('layouts.app')
 @extends('adminlte::page')
 
 @section('title', 'Dashboard')
@@ -21,7 +20,7 @@
             <h2>Edit New User</h2>
         </div>
         <div class="pull-right">
-           
+           UserController
         </div>
     </div>
 </div>
@@ -39,7 +38,7 @@
 @endif
 
 
-{!! Form::model($user, ['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
+{!! Form::model($user, ['method' => 'PUT','route' => ['users.update', $user->id]]) !!}
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="form-group">

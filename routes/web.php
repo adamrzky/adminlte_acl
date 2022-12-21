@@ -24,7 +24,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles','RoleController');
-    Route::resource('users','UserController');
+    // Route::resource('users','UserController');
     // Route::resource('products','ProductController');
     Route::resource('permissions', 'PermissionController');
 
@@ -38,6 +38,18 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/products/store', 'ProductController@store')->name('products.store');
     Route::delete('/products/{product}/destroy', 'ProductController@destroy')->name('products.destroy');
 
+    //User
+    Route::get('/users', 'UserController@index')->name('users.index');
+    Route::get('/users/show/{id}', 'UserController@show')->name('users.show');
+    Route::get('/users/{id}/edit', 'UserController@edit')->name('users.edit');
+    Route::get('/users/create', 'UserController@create')->name('users.create');
+    Route::PUT('/users/update/{product}', 'UserController@update')->name('users.update');
+    Route::post('/users/store', 'UserController@store')->name('users.store');
+    Route::delete('/users/{product}/destroy', 'UserController@destroy')->name('users.destroy');
 
+    //Permissions
+
+
+    //Role
 
 });
