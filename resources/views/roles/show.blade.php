@@ -1,5 +1,18 @@
 @extends('layouts.app')
+@extends('adminlte::page')
 
+@section('title', 'Dashboard')
+
+
+@section('css')
+<link rel="stylesheet" href="/css/admin_custom.css">
+@stop
+
+@section('js')
+<script>
+    console.log('Hi!'); 
+</script>
+@stop
 
 @section('content')
 <div class="row">
@@ -19,6 +32,7 @@
         <div class="form-group">
             <strong>Name:</strong>
             {{ $role->name }}
+            {{-- {{  $role->name ?? $role }} --}}
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12">

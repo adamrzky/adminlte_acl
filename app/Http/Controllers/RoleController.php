@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
+use Illuminate\Support\Facades\Crypt;
     
 class RoleController extends Controller
 {
@@ -74,6 +75,7 @@ class RoleController extends Controller
      */
     public function show($id)
     {
+        $id = Crypt::decrypt($id);
         $role = Role::find($id);
         $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",$id)
@@ -90,6 +92,7 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
+        $id = Crypt::decrypt($id);
         $role = Role::find($id);
         $permission = Permission::get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)

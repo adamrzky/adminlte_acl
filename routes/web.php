@@ -23,10 +23,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth']], function() {
-    Route::resource('roles','RoleController');
+    // Route::resource('roles','RoleController');
     // Route::resource('users','UserController');
     // Route::resource('products','ProductController');
-    Route::resource('permissions', 'PermissionController');
+    // Route::resource('permissions', 'PermissionController');
 
     //Product
     Route::get('/products', 'ProductController@index')->name('products.index');
@@ -47,9 +47,23 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/users/store', 'UserController@store')->name('users.store');
     Route::delete('/users/{product}/destroy', 'UserController@destroy')->name('users.destroy');
 
+    //Role  
+    
+    Route::get('/roles', 'RoleController@index')->name('roles.index');
+    Route::get('/roles/show/{id}', 'RoleController@show')->name('roles.show');
+    Route::get('/roles/{id}/edit', 'RoleController@edit')->name('roles.edit');
+    Route::get('/roles/create', 'RoleController@create')->name('roles.create');
+    Route::patch('/roles/update/{product}', 'RoleController@update')->name('roles.update');
+    Route::post('/roles/store', 'RoleController@store')->name('roles.store');
+    Route::delete('/roles/{product}/destroy', 'RoleController@destroy')->name('roles.destroy');
+
+
     //Permissions
-
-
-    //Role
-
+    Route::get('/permissions', 'PermissionController@index')->name('permissions.index');
+    Route::get('/permissions/show/{id}', 'PermissionController@show')->name('permissions.show');
+    Route::get('/permissions/{id}/edit', 'PermissionController@edit')->name('permissions.edit');
+    Route::get('/permissions/create', 'PermissionController@create')->name('permissions.create');
+    Route::put('/permissions/update/{product}', 'PermissionController@update')->name('permissions.update');
+    Route::post('/permissions/store', 'PermissionController@store')->name('permissions.store');
+    Route::delete('/permissions/{product}/destroy', 'PermissionController@destroy')->name('permissions.destroy');
 });

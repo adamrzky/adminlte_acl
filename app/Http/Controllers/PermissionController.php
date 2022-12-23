@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
     
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
     
 class PermissionController extends Controller
 { 
@@ -67,8 +68,10 @@ class PermissionController extends Controller
      * @param  \App\Product  $permission
      * @return \Illuminate\Http\Response
      */
-    public function show(Permission $permission)
+    public function show(Permission $permission, $id)
     {
+        $id = Crypt::decrypt($id);
+        $permission = Permission::where('id', $id)->first();
         return view('permissions.show',compact('permission'));
     }
     
@@ -78,8 +81,10 @@ class PermissionController extends Controller
      * @param  \App\Product  $permission
      * @return \Illuminate\Http\Response
      */
-    public function edit(Permission $permission)
+    public function edit(Permission $permission, $id)
     {
+        $id = Crypt::decrypt($id);
+        $permission = Permission::where('id', $id)->first();
         return view('permissions.edit',compact('permission'));
     }
     

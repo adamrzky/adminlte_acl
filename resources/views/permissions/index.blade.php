@@ -40,10 +40,10 @@
 	        <td>{{ $permission->name }}</td>
 	      
 	        <td>
-                <form action="{{ route('permissions.destroy',$permission->id) }}" method="POST">
-                    <a class="btn btn-info" href="{{ route('permissions.show',$permission->id) }}">Show</a>
+                <form action="{{ route('permissions.destroy', $permission->id) }}" method="POST">
+                    <a class="btn btn-info" href="{{ route('permissions.show',Crypt::encrypt ($permission->id)) }}">Show</a>
                     @can('permission-edit')
-                    <a class="btn btn-primary" href="{{ route('permissions.edit',$permission->id) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('permissions.edit',Crypt::encrypt ($permission->id)) }}">Edit</a>
                     @endcan
 
 
