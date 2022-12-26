@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
     
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
     
 class ProductController extends Controller
 { 
@@ -56,9 +57,10 @@ class ProductController extends Controller
         ]);
     
         Product::create($request->all());
-    
+        
         return redirect()->route('products.index')
                         ->with('success','Product created successfully.');
+                       
     }
     
     /**
@@ -67,15 +69,19 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show(Product $product, $id)
     {
-        return view('products.show',compact('product'));
+        $id = Crypt::decrypt($id);
+        $product = Product::where('id', $id)->first();
+        return view('products.show', compact('product'));
     }
 
-    public function broadcast(Product $product)
-    {
-        return view('products.show',compact('product'));
-    }
+    // public function broadcast(Product $product, $id)
+    // {
+    //     $id = Crypt::decrypt($id);
+    //     $product = Product::where('id', $id)->first();
+    //     return view('products.show', compact('product'));
+    // }
     
     /**
      * Show the form for editing the specified resource.
@@ -83,9 +89,15 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    // public function edit(Product $product)
+    // {
+    //     return view('products.edit',compact('product'));
+    // }
+    public function edit(Product $product, $id)
     {
-        return view('products.edit',compact('product'));
+        $id = Crypt::decrypt($id);
+        $product = Product::where('id', $id)->first();
+        return view('products.edit', compact('product'));
     }
     
     /**
@@ -101,7 +113,7 @@ class ProductController extends Controller
             'name' => 'required',
             'detail' => 'required',
         ]);
-    
+        
         $product->update($request->all());
     
         return redirect()->route('products.index')

@@ -18,14 +18,13 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::group(['middleware' => ['cors', 'json.response']], function () {
-    // public routes
-    Route::post('/login', 'Auth\ApiAuthController@login')->name('login.api');
-    Route::post('/register', 'Auth\ApiAuthController@register')->name('register.api');
-    // Route::post('/logout', 'Auth\ApiAuthController@logout')->name('logout.api');
-});
+Route::group(['middleware' => ['cors']], function () {
+    //
+    Route::post('/register', 'API\AuthController@register');
+    Route::post('/gettoken', 'API\AuthController@getToken');
 
-Route::middleware('auth:api')->group(function () {
-    // our routes to be protected will go in here
-    Route::post('/logout', 'Auth\ApiAuthController@logout')->name('logout.api');
+    Route::group(['middleware' => ['check.auth']], function () {
+        Route::get('/product', 'API\ProductController@index')->name('api.product');
+    });
+
 });
