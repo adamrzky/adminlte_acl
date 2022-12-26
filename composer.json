@@ -14,6 +14,10 @@
         "guzzlehttp/guzzle": "^6.3",
         "jeroennoten/laravel-adminlte": "^3.8",
         "laravel/framework": "^7.0",
+<<<<<<< HEAD
+        "laravel/helpers": "^1.5",
+=======
+>>>>>>> d42c65314d7be1c1f15cd32f1143ea06697a8022
         "laravel/passport": "~9.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "2.1",
