@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QrisController extends Controller
 {
@@ -18,7 +19,7 @@ class QrisController extends Controller
      */
     public function index()
     {
-        //
+        return view('qris.index');
     }
 
     /**
@@ -132,14 +133,19 @@ class QrisController extends Controller
         ])->post('http://192.168.26.75:9800/v1/api/aquerier/create/qr', 
             $data
         );
-       
-       
+        
+        
+        $qris = ($response['MPO']['QRIS']);
+        $qrcode = QrCode::size(400)->generate($qris);
+        
         
         Log::channel('newlog')->info('resp api : ' .$response);
 
+        // return $qrcode;
+            
         // Log::channel('newlog')->info('resp : ' .$response);
 
-        return $response->json();
+        return $response->json() ;
         
         
     }
