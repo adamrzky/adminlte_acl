@@ -123,7 +123,7 @@ class QrisController extends Controller
                 $data = [];
                 break;
         }
-        dd($data);
+        // dd($data);
         
         Log::channel('newlog')->info(['req api : ' =>  $data ]);
 
@@ -135,8 +135,9 @@ class QrisController extends Controller
         );
         
         
-        $qris = ($response['MPO']['QRIS']);
-        $qrcode = QrCode::size(400)->generate($qris);
+        
+        // $qris = ($response['MPO']['QRIS']);
+        // $qrcode = QrCode::size(400)->generate($qris);
         
         
         Log::channel('newlog')->info('resp api : ' .$response);
@@ -164,6 +165,7 @@ class QrisController extends Controller
      */
     public function hit(Request $request)
     {
+        Log::channel('newlog')->info('req : ' .$request);
         // dd($request);
         switch ($request->qrType) {
             case '1':
@@ -264,11 +266,37 @@ class QrisController extends Controller
         ])->post('http://192.168.26.75:9800/v1/api/aquerier/create/qr', 
             $data
         );
-    
 
-        return $response->json() ;
+        
+
+
+        Log::channel('newlog')->info('resp api : ' .$response);
+        // return view('qris.index')->with($data);
+        // return view('qris.index', ['responses' => $response]);
        
+        // return $response->json() ;
+
+        // return redirect()->route('qris.index')
+        // ->with('success', $response['MPO']['QRIS']);
+
+        // return redirect()->route('qris.index')
+        // ->with('success');
+        
+        
+        $qris = ($response['MPO']['QRIS']);
+        $qrcode =  base64_encode(QrCode::size(80)->generate($qris));
+
+        // return view('qris.index',$qrcode);
+
+        return response()->json([
+            // 'success' => true,
+            // 'message' => 'sukses',
+            'data'    => $response['MPO']['QRIS'],
+            'qr' => $qrcode
+        ]);
+        
     }
+    
 
     /**
      * Update the specified resource in storage.
