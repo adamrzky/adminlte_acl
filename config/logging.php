@@ -99,9 +99,16 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
-        'newlog' => [
+
+        'apilog' => [
             'driver' => 'single',
-            'path' => storage_path('logs/daily.log'),
+            'path' => storage_path('logs/'.date('Y-m-d').'-api.log'),
+            'level' => 'info',
+        ],
+
+        'weblog' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/'.date('Y-m-d').'-web.log'),
             'level' => 'info',
         ],
     ],
