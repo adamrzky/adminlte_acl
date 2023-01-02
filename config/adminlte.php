@@ -335,12 +335,12 @@ return [
             'icon'        => 'far fa-thin fa-gift',
             'label_color' => 'success',
         ],
-        // ['header' => 'account_settings'],
-        // [
-        //     'text' => 'profile',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-user',
-        // ],
+        // ['header' => 'test'],
+        [
+            'text' => 'Test QRIS',
+            'url'  => 'qris',
+            'icon' => 'fas fa-fw fa-lock',
+        ],
         // [
         //     'text' => 'change_password',
         //     'url'  => 'admin/settings',

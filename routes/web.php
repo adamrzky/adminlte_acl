@@ -66,4 +66,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::put('/permissions/update/{product}', 'PermissionController@update')->name('permissions.update');
     Route::post('/permissions/store', 'PermissionController@store')->name('permissions.store');
     Route::delete('/permissions/{product}/destroy', 'PermissionController@destroy')->name('permissions.destroy');
+
+    //TestAPI
+    Route::get('/qris', 'API\QrisController@index')->name('qris.index');
+    Route::post('/qris/hit', 'API\QrisController@hit')->name('qris.hit');
+
+
 });
