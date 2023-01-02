@@ -30,64 +30,65 @@ class QrisController extends Controller
      */
     public function store(Request $request)
     {
-        Log::channel('newlog')->info('req : ' .$request);
+        Log::channel('apilog')->info('==============================');
+        Log::channel('apilog')->info('REQ : ' . json_encode($request->all()));
 
         switch ($request->qrType) {
             case '1':
-                $data = [ 
+                $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
                         "AMOUNT" => $request->param['MPI']['AMOUNT']
                     ]
-                    ];
+                ];
 
                 break;
-            
+
             case '2':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
                         "AMOUNT" => $request->param['MPI']['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '3':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
                         "AMOUNT" => $request->param['MPI']['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '4':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
                         "AMOUNT" => $request->param['MPI']['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '5':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
                         "AMOUNT" => $request->param['MPI']['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '6':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
                         "AMOUNT" => $request->param['MPI']['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '7':
                 $data = [
                     "MPI" => [
@@ -95,9 +96,9 @@ class QrisController extends Controller
                         "AMOUNT" => $request->param['MPI']['AMOUNT'],
                         "TIP_INDICATOR" => $request->param['MPI']['TIP_INDICATOR']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '8':
                 $data = [
                     "MPI" => [
@@ -105,9 +106,9 @@ class QrisController extends Controller
                         "AMOUNT" => $request->param['MPI']['AMOUNT'],
                         "FEE_AMOUNT" => $request->param['MPI']['FEE_AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '9':
                 $data = [
                     "MPI" => [
@@ -115,40 +116,34 @@ class QrisController extends Controller
                         "AMOUNT" => $request->param['MPI']['AMOUNT'],
                         "FEE_AMOUNT_PERCENTAGE" => $request->param['MPI']['FEE_AMOUNT_PERCENTAGE']
                     ]
-                    ];
+                ];
                 break;
-            
-            
+
             default:
                 $data = [];
                 break;
         }
-        // dd($data);
-        
-        Log::channel('newlog')->info(['req api : ' =>  $data ]);
 
-       
+        Log::channel('apilog')->info('REQ SEND API : ' .  json_encode($data));
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-        ])->post('http://192.168.26.75:9800/v1/api/aquerier/create/qr', 
+        ])->post(
+            'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
             $data
         );
-        
-        
-        
-        // $qris = ($response['MPO']['QRIS']);
-        // $qrcode = QrCode::size(400)->generate($qris);
-        
-        
-        Log::channel('newlog')->info('resp api : ' .$response);
 
-        // return $qrcode;
-            
-        // Log::channel('newlog')->info('resp : ' .$response);
+        Log::channel('apilog')->info('RESP SEND API : ' . json_encode($response->json()));
 
-        return $response->json() ;
-        
-        
+        $qris = ($response['MPO']['QRIS']);
+        $qrcode = QrCode::size(400)->generate($qris);
+
+        $res = $response->json();
+        $res['QR'] = base64_encode($qrcode);
+
+        Log::channel('apilog')->info('RESP : ' . json_encode($res));
+
+        return response()->json($res);
     }
 
 
