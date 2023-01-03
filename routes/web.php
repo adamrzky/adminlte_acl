@@ -70,6 +70,7 @@ Route::group(['middleware' => ['auth']], function() {
     //TestAPI
     Route::get('/qris', 'API\QrisController@index')->name('qris.index');
     Route::post('/qris/hit', 'API\QrisController@hit')->name('qris.hit');
+    Route::get('/qris/img', 'API\QrisController@mergeImg')->name('qris.mergeImg');
 
 
 });

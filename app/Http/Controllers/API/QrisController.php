@@ -266,28 +266,36 @@ class QrisController extends Controller
 
 
         Log::channel('newlog')->info('resp api : ' .$response);
-        // return view('qris.index')->with($data);
-        // return view('qris.index', ['responses' => $response]);
-       
-        // return $response->json() ;
-
-        // return redirect()->route('qris.index')
-        // ->with('success', $response['MPO']['QRIS']);
-
-        // return redirect()->route('qris.index')
-        // ->with('success');
-        
+  
         
         $qris = ($response['MPO']['QRIS']);
-        $qrcode =  base64_encode(QrCode::size(80)->generate($qris));
 
-        // return view('qris.index',$qrcode);
+        
+
+        // $image1 = storage_path('images\qris.png');
+        // $image2 = QrCode::size(400)->generate($qris);
+        $combine = base64_encode(QrCode::format('png')->merge('\storage\images\qris.png')->generate($qris));
+        
+        // // dd($image1);
+        // list($width,$height) = getimagesize($image1);
+
+        // $image1 = imagecreatefrompng($image1);
+        // $image2 = imagecreatefromjpeg($image2);
+        
+        // imagecopymerge($image1,$image2,40,100,0,0,$width,$height,100);
+        // header('Content-Type:image/jpg');
+        // imagepng($image1);
+        
+        // imagepng($image1,'merged.png');
+        // $masterImg = imagepng($image1,'merged.png');
+
+        // $combine =  base64_encode(QrCode::size(200)->generate($qris));
+      
 
         return response()->json([
-            // 'success' => true,
-            // 'message' => 'sukses',
             'data'    => $response['MPO']['QRIS'],
-            'qr' => $qrcode
+            'qr' => $combine,
+         
         ]);
         
     }
@@ -303,6 +311,26 @@ class QrisController extends Controller
     public function update()
     {
         //
+    }
+
+    public function mergeImg()
+    {
+        $image1 = storage_path('images\qris.png');
+        $image2 = public_path('images\qris2.jpg');
+
+        list($width,$height) = getimagesize($image2);
+
+        $image1 = imagecreatefromstring(file_get_contents($image1));
+        $image2 = imagecreatefromstring(file_get_contents($image2));
+
+        // imagecopymerge($image1,$image2,100,100,200,200,$width,$height,150);
+        imagecopymerge($image1, $image2, 100, 100 , 0, 0, 200 , 200 , 100);
+        header('Content-Type:image/jpg');
+        imagepng($image1);
+
+        $masterImg = imagejpeg($image1,'merged.png');
+
+        dd($masterImg);
     }
 
     /**
