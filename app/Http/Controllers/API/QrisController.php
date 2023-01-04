@@ -9,9 +9,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Intervention\Image\ImageManager;
+use Image;
+
 
 class QrisController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -291,7 +295,6 @@ class QrisController extends Controller
 
 
 
-
         Log::channel('newlog')->info('resp api : ' . $response);
 
 
@@ -318,7 +321,9 @@ class QrisController extends Controller
 
         // $combine =  base64_encode(QrCode::size(200)->generate($qris));
 
-
+        $qris = ($response['MPO']['QRIS']);
+        $combine =  base64_encode(QrCode::size(200)->generate($qris));
+      
         return response()->json([
             'data'    => $response['MPO']['QRIS'],
             'qr' => $combine,
@@ -334,11 +339,6 @@ class QrisController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update()
-    {
-        //
-    }
-
     public function mergeImg()
     {
         $logo_file = storage_path('images\qris.png');
@@ -358,8 +358,31 @@ class QrisController extends Controller
         imagejpeg($photoFrame, $targetfile);
         echo '<img src="' . $targetfile . '" />';
         die;
+       
+
+        // $qrcode = QrCode::size(400)->generate($examp);
+        $examp ='adam';
+        $qrcodes = QrCode::format('png')->generate($examp);
+
+        dd($qrcode);
+
+        $wmQris = Image::make('images/qris.png');
+        $wmQris->resize(100, 50);
+
+        $canvas = Image::canvas(500, 500);
+
+        $canvas->insert($qrcodes, 'center' );
+        $canvas->insert($wmQris, 'top' );
+
+        // $canvas->insert('images/qris.png', 'bottom-right', 10, 10);
+
+        $canvas->save('images/hasil.jpg');
+
+        return Image::make($canvas)->response();
+        
     }
 
+    
     /**
      * Remove the specified resource from storage.
      *

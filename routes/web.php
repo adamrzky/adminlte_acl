@@ -63,14 +63,24 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/permissions/show/{id}', 'PermissionController@show')->name('permissions.show');
     Route::get('/permissions/{id}/edit', 'PermissionController@edit')->name('permissions.edit');
     Route::get('/permissions/create', 'PermissionController@create')->name('permissions.create');
-    Route::put('/permissions/update/{product}', 'PermissionController@update')->name('permissions.update');
+    Route::put('/permissions/update/{permission}', 'PermissionController@update')->name('permissions.update');
     Route::post('/permissions/store', 'PermissionController@store')->name('permissions.store');
-    Route::delete('/permissions/{product}/destroy', 'PermissionController@destroy')->name('permissions.destroy');
+    Route::delete('/permissions/{permission}/destroy', 'PermissionController@destroy')->name('permissions.destroy');
 
     //TestAPI
     Route::get('/qris', 'API\QrisController@index')->name('qris.index');
     Route::post('/qris/hit', 'API\QrisController@hit')->name('qris.hit');
     Route::get('/qris/img', 'API\QrisController@mergeImg')->name('qris.mergeImg');
+
+
+    //Merchant
+    Route::get('/merchant', 'MerchantController@index')->name('merchant.index');
+    Route::get('/merchant/show/{id}', 'MerchantController@show')->name('merchant.show');
+    Route::get('/merchant/{id}/edit', 'MerchantController@edit')->name('merchant.edit');
+    Route::get('/merchant/create', 'MerchantController@create')->name('merchant.create');
+    Route::put('/merchant/update/{merchant}', 'MerchantController@update')->name('merchants.update');
+    Route::post('/merchant/store', 'MerchantController@store')->name('merchant.store');
+    Route::delete('/merchant/{merchant}/destroy', 'MerchantController@destroy')->name('merchant.destroy');
 
 
 });
