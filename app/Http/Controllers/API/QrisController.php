@@ -135,22 +135,48 @@ class QrisController extends Controller
 
         Log::channel('apilog')->info('RESP SEND API : ' . json_encode($response->json()));
 
-        $qris = ($response['MPO']['QRIS']);
+        $qris = $response['MPO']['QRIS'];
         $qrcode = QrCode::size(400)->generate($qris);
 
         $res = $response->json();
-        $res['QR'] = base64_encode($qrcode);
+        // $detail = $this->parsingQrCodeASPI($qris);
+        // $res['MPO']['NNS'] = base64_encode($qrcode);
+        // $res['MPO']['NMID'] = base64_encode($qrcode);
+        $res['MPO']['QR'] = base64_encode($qrcode);
 
         Log::channel('apilog')->info('RESP : ' . json_encode($res));
 
         return response()->json($res);
     }
 
+    private function parsingQrCodeASPI($qris, $pIsNested = true)
+    {
+        while (strlen($qris) > 0) {
+            //Get Data ID
+            $tID = substr($qris, 0, 2);
+            $tIDKey = intval($tID);
+            $qris = substr($qris, 2);
 
+            //Get Data Length
+            $tLengthData = substr($qris, 0, 2);
+            $qris = substr($qris, 2);
 
+            // //Get Data Value
+            $tLengthDataInt = intval($tLengthData);
+            $tValue = substr($qris, 0, $tLengthDataInt);
+            $qris = substr($qris, $tLengthDataInt);
 
+            $additional = ['26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '51', '62'];
+            if (in_array($tIDKey, $additional) && $pIsNested) {
+                // tResult . put(tIDKey, parsingQrCodeASPI(tValue, false));
+                $tResult[$tIDKey] = $this->parsingQrCodeASPI($tValue, false);
+            } else {
+                $tResult[$tIDKey] = $tValue;
+            }
+        }
 
-
+        return $tResult;
+    }
 
     /**
      * Display the specified resource.
@@ -160,64 +186,64 @@ class QrisController extends Controller
      */
     public function hit(Request $request)
     {
-        Log::channel('newlog')->info('req : ' .$request);
+        Log::channel('newlog')->info('req : ' . $request);
         // dd($request);
         switch ($request->qrType) {
             case '1':
-                $data = [ 
+                $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request['MERCHANT_ID'],
                         "AMOUNT" => $request['AMOUNT']
                     ]
-                    ];
+                ];
 
                 break;
-            
+
             case '2':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request['MERCHANT_ID'],
                         "AMOUNT" => $request['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '3':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request['MERCHANT_ID'],
                         "AMOUNT" => $request['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '4':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request['MERCHANT_ID'],
                         "AMOUNT" => $request['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '5':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request['MERCHANT_ID'],
                         "AMOUNT" => $request['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '6':
                 $data = [
                     "MPI" => [
                         "MERCHANT_ID" => $request['MERCHANT_ID'],
                         "AMOUNT" => $request['AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '7':
                 $data = [
                     "MPI" => [
@@ -225,9 +251,9 @@ class QrisController extends Controller
                         "AMOUNT" => $request['AMOUNT'],
                         "TIP_INDICATOR" => $request['TIP_INDICATOR']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '8':
                 $data = [
                     "MPI" => [
@@ -235,21 +261,21 @@ class QrisController extends Controller
                         "AMOUNT" => $request['AMOUNT'],
                         "FEE_AMOUNT" => $request['FEE_AMOUNT']
                     ]
-                    ];
+                ];
                 break;
-            
+
             case '9':
                 $data = [
-                        "MPI" => [
+                    "MPI" => [
                         "MERCHANT_ID" => $request['MERCHANT_ID'],
                         "AMOUNT" => $request['AMOUNT'],
                         "FEE_AMOUNT_PERCENTAGE" => $request['FEE_AMOUNT_PERCENTAGE']
-                ]
+                    ]
                 ];
                 break;
-                
-                
-            
+
+
+
             default:
                 $data = [];
                 break;
@@ -258,48 +284,48 @@ class QrisController extends Controller
         // dd($data);
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-        ])->post('http://192.168.26.75:9800/v1/api/aquerier/create/qr', 
+        ])->post(
+            'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
             $data
         );
 
-        
 
 
-        Log::channel('newlog')->info('resp api : ' .$response);
-  
-        
+
+        Log::channel('newlog')->info('resp api : ' . $response);
+
+
         $qris = ($response['MPO']['QRIS']);
 
-        
+
 
         // $image1 = storage_path('images\qris.png');
         // $image2 = QrCode::size(400)->generate($qris);
         $combine = base64_encode(QrCode::format('png')->merge('\storage\images\qris.png')->generate($qris));
-        
+
         // // dd($image1);
         // list($width,$height) = getimagesize($image1);
 
         // $image1 = imagecreatefrompng($image1);
         // $image2 = imagecreatefromjpeg($image2);
-        
+
         // imagecopymerge($image1,$image2,40,100,0,0,$width,$height,100);
         // header('Content-Type:image/jpg');
         // imagepng($image1);
-        
+
         // imagepng($image1,'merged.png');
         // $masterImg = imagepng($image1,'merged.png');
 
         // $combine =  base64_encode(QrCode::size(200)->generate($qris));
-      
+
 
         return response()->json([
             'data'    => $response['MPO']['QRIS'],
             'qr' => $combine,
-         
+
         ]);
-        
     }
-    
+
 
     /**
      * Update the specified resource in storage.
@@ -315,22 +341,23 @@ class QrisController extends Controller
 
     public function mergeImg()
     {
-        $image1 = storage_path('images\qris.png');
-        $image2 = public_path('images\qris2.jpg');
-
-        list($width,$height) = getimagesize($image2);
-
-        $image1 = imagecreatefromstring(file_get_contents($image1));
-        $image2 = imagecreatefromstring(file_get_contents($image2));
-
-        // imagecopymerge($image1,$image2,100,100,200,200,$width,$height,150);
-        imagecopymerge($image1, $image2, 100, 100 , 0, 0, 200 , 200 , 100);
-        header('Content-Type:image/jpg');
-        imagepng($image1);
-
-        $masterImg = imagejpeg($image1,'merged.png');
-
-        dd($masterImg);
+        $logo_file = storage_path('images\qris.png');
+        $image_file = storage_path('images\qris2.jpg');
+        $targetfile = storage_path('images\img2.png');
+        $photo = imagecreatefromjpeg($image_file);
+        $fotoW = imagesx($photo);
+        $fotoH = imagesy($photo);
+        $logoImage = imagecreatefrompng($logo_file);
+        $logoW = imagesx($logoImage);
+        $logoH = imagesy($logoImage);
+        $photoFrame = imagecreatetruecolor($fotoW, $fotoH);
+        $dest_x = $fotoW - $logoW;
+        $dest_y = $fotoH - $logoH;
+        imagecopyresampled($photoFrame, $photo, 0, 0, 0, 0, $fotoW, $fotoH, $fotoW, $fotoH);
+        imagecopy($photoFrame, $logoImage, $dest_x, $dest_y, 0, 0, $logoW, $logoH);
+        imagejpeg($photoFrame, $targetfile);
+        echo '<img src="' . $targetfile . '" />';
+        die;
     }
 
     /**
