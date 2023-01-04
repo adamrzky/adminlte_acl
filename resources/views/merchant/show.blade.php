@@ -53,19 +53,19 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Merchant Curency:</strong>
+                <strong> TERMINAL_LABEL:</strong>
                 {{ $merchant->TERMINAL_LABEL }}
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Merchant Curency:</strong>
+                <strong>MERCHANT_COUNTRY:</strong>
                 {{ $merchant->MERCHANT_COUNTRY }}
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Merchant Curency:</strong>
+                <strong>QRIS_MERCHANT_DOMESTIC_ID:</strong>
                 {{ $merchant->QRIS_MERCHANT_DOMESTIC_ID }}
             </div>
         </div>

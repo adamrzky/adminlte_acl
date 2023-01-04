@@ -26,6 +26,11 @@
         </div>
     </div>
     
+	
+	
+	
+
+
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -42,44 +47,90 @@
     <form action="{{ route('merchant.store') }}" method="POST">
     	@csrf
 
-
+		
          <div class="row">
 		    <div class="col-xs-12 col-sm-12 col-md-12">
-		        <div class="form-group">
-                    {{-- <div class="form-group">
-                        <strong>Merchant ID : </strong>
-                        <input type="text" name="MERCHANT_ID" class="form-control col-3" placeholder="Name">
-                    </div> --}}
+				<div class="form-group" >
+					<strong>Merchant ID : </strong>
+					<input type="text" name="MERCHANT_ID" class="form-control col-3" value={{ $custom_id }} placeholder="Name" readonly>
+				</div>
+				<div class="form-group">
 		            <strong>Nomor Rekening : </strong>
 		            <input type="text" name="REKENING_NUMBER" class="form-control col-3 " placeholder="Name">
 		        </div>
 		        <div class="form-group">
-		            <strong>Nama Merchant :</strong>
+		            <strong>Merchant Name :</strong>
 		            <input type="text" name="MERCHANT_NAME" class="form-control col-3" placeholder="Name">
 		        </div>
 		        <div class="form-group">
-		            <strong>Alamat Merchant : </strong>
+		            <strong>Merchant City :</strong>
+		            <input type="text" name="MERCHANT_CITY" class="form-control col-3" placeholder="Name">
+		        </div>
+		        <div class="form-group">
+		            <strong>Merchant Address : </strong>
 		            <input type="text" name="MERCHANT_ADDRESS" class="form-control col-3" placeholder="Name">
 		        </div>
+				
 		        <div class="form-group">
-		            <strong>Kategori : </strong>
+		            <strong>Category : </strong>
 		            <input type="text" name="CATEGORY" class="form-control col-3" placeholder="Name">
 		        </div>
-		        <div class="form-group">
-		            <strong>Kriteria : </strong>
-		            <input type="text" name="CRITERIA" class="form-control col-3" placeholder="Name">
-		        </div>
-		        <div class="form-group">
-		            <strong>Country Code  : </strong>
-		            <input type="text" name="MERCHANT_CURRENCY_CODE" class="form-control col-3" placeholder="Name" value="360" >
-		        </div>
-                <div> 
-                    <strong>Status  : </strong>
-                    <select class="form-control col-3" name="STATUS">
-                        <option selected> 1 </option>
-                        <option> 0 </option>
+				<div class="form-group"> 
+                    <strong>Merchant Type  : </strong>
+                    <select class="form-control col-3" name="MERCHANT_TYPE">
+						<option selected >  Select --- </option>
+						@foreach ($getMcc as $dropdown)
+                        <option >  {{ $dropdown->CODE_MCC }} </option>
+						@endforeach
                     </select>
                 </div>
+				
+				<div class="form-group"> 
+                    <strong>QR Type  : </strong>
+                    <select class="form-control col-3" name="TYPE_QR">
+						<option selected> Select -- </option>
+                        <option> Statis </option>
+                        <option> Dynamic </option>
+                    </select>
+
+                </div>
+		        <div class="form-group">
+		            <strong>Postal Code : </strong>
+		            <input type="text" name="POSTAL_CODE" class="form-control col-3" placeholder="Name">
+		        </div>
+		        <div class="form-group">
+		            <strong>Criteria  : </strong>
+                    <select class="form-control col-3" name="CRITERIA">
+                        <option selected> Select -- </option>
+                        <option> UMI </option>
+                        <option> UKE </option>
+                        <option> UME </option>
+                        <option> UBE </option>
+                    </select>
+		        </div>
+				<div class="form-group"> 
+					<strong>Status  : </strong>
+					<select class="form-control col-3" name="STATUS">
+						<option selected value="1" > Active </option>
+						<option value='0'> Non Active </option>
+					</select>
+				</div>
+		        <div class="form-group" hidden >
+		            <strong>TERMINAL_LABEL  : </strong>
+		            <input type="text" name="TERMINAL_LABEL" class="form-control col-3" placeholder="Name" value="360" readonly >
+		        </div>
+		        <div class="form-group" hidden>
+		            <strong>MERCHANT_CURRENCY_CODE  : </strong>
+		            <input type="text" name="MERCHANT_CURRENCY_CODE" class="form-control col-3" placeholder="Name" value="360" readonly >
+		        </div>
+		        <div class="form-group" hidden >
+		            <strong>QRIS_MERCHANT_DOMESTIC_ID  : </strong>
+		            <input type="text" name="QRIS_MERCHANT_DOMESTIC_ID" class="form-control col-3" placeholder="Name" value="360" readonly >
+		        </div>
+		        <div class="form-group" hidden >
+		            <strong>MERCHANT_COUNTRY  : </strong>
+		            <input type="text" name="MERCHANT_COUNTRY" class="form-control col-3" placeholder="Name" value="ID" readonly >
+		        </div>
 		    </div>
 		    <div class="col-xs-12 col-sm-12 col-md-12">
 		        {{-- <div class="form-group">
@@ -95,7 +146,6 @@
 
 
     </form>
-
 
 
 @endsection

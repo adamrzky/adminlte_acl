@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Models\Merchant;
+use App\Models\Mcc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class MerchantController extends Controller
 {
@@ -39,9 +41,23 @@ class MerchantController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Mcc $mcc)
     {
-        return view('merchant.create');
+        $getMcc = Mcc::all();
+        $uuid = Str::uuid();
+        $cstmUuid = str_replace('ID-', ' ' , $uuid);
+        $custom_id = 'ID-' . rand(000000000000, 9999999999999);
+        
+        // dd($custom_id);
+            
+    
+      
+
+    //    dd($mcc);
+    //    return view('merchant.creates',compact('merchant'));
+
+    return view('merchant.create',compact('getMcc' , 'custom_id'));
+
     }
     
     /**
@@ -52,21 +68,22 @@ class MerchantController extends Controller
      */
     public function store(Request $request)
     {
+
         // dd($request);
         request()->validate([
             // 'ID' => '',
             // 'CREATED_AT' => 'required',
             // 'UPDATED_AT' => 'required',
             // 'TERMINAL_LABEL' => 'required',
-            // 'MERCHANT_COUNTRY' => 'required',
+            'MERCHANT_COUNTRY' => 'required' ,
             // 'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
             // 'TYPE_QR' => 'required', 
             'MERCHANT_NAME' => 'required',
-            // 'MERCHANT_CITY' => 'required',
+            'MERCHANT_CITY' => 'required',
             // 'POSTAL_CODE' => 'required',
-            'MERCHANT_CURRENCY_CODE' => 'required',
+            // 'MERCHANT_CURRENCY_CODE' => '',
             // 'MERCHANT_TYPE' => 'required',
-            // 'MERCHANT_ID' => 'required',
+            'MERCHANT_ID' => 'required',
             'REKENING_NUMBER' => 'required',
             'CATEGORY' => 'required',
             'CRITERIA' => 'required',
@@ -135,8 +152,8 @@ class MerchantController extends Controller
             'MERCHANT_COUNTRY' => '',
             // 'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
             // 'TYPE_QR' => 'required', 
-            'MERCHANT_NAME' => '',
-            'MERCHANT_CITY' => 'required',
+            'MERCHANT_NAME' => '',  
+            'MERCHANT_CITY' => '',
             'POSTAL_CODE' => '',
             'MERCHANT_CURRENCY_CODE' => '',
             // 'MERCHANT_TYPE' => 'required',
@@ -169,6 +186,14 @@ class MerchantController extends Controller
     
     //     return redirect()->route('merchants.index')
     //                     ->with('success','Merchant deleted successfully');
+    // }
+
+    // public function getMcc(Mcc $mcc)
+    // {
+    //    $mcc = Mcc::all();
+    // //    dd($mcc);
+    //    return view('merchant.creates',compact('merchant'));
+       
     // }
     
 }
