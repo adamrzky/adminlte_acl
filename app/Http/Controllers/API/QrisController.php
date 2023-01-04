@@ -9,9 +9,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Intervention\Image\ImageManager;
+use Image;
+
 
 class QrisController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -266,30 +270,9 @@ class QrisController extends Controller
 
 
         Log::channel('newlog')->info('resp api : ' .$response);
-  
-        
+
         $qris = ($response['MPO']['QRIS']);
-
-        
-
-        // $image1 = storage_path('images\qris.png');
-        // $image2 = QrCode::size(400)->generate($qris);
-        $combine = base64_encode(QrCode::format('png')->merge('\storage\images\qris.png')->generate($qris));
-        
-        // // dd($image1);
-        // list($width,$height) = getimagesize($image1);
-
-        // $image1 = imagecreatefrompng($image1);
-        // $image2 = imagecreatefromjpeg($image2);
-        
-        // imagecopymerge($image1,$image2,40,100,0,0,$width,$height,100);
-        // header('Content-Type:image/jpg');
-        // imagepng($image1);
-        
-        // imagepng($image1,'merged.png');
-        // $masterImg = imagepng($image1,'merged.png');
-
-        // $combine =  base64_encode(QrCode::size(200)->generate($qris));
+        $combine =  base64_encode(QrCode::size(200)->generate($qris));
       
 
         return response()->json([
@@ -308,31 +291,33 @@ class QrisController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update()
-    {
-        //
-    }
-
     public function mergeImg()
     {
-        $image1 = storage_path('images\qris.png');
-        $image2 = public_path('images\qris2.jpg');
+       
 
-        list($width,$height) = getimagesize($image2);
+        // $qrcode = QrCode::size(400)->generate($examp);
+        $examp ='adam';
+        $qrcodes = QrCode::format('png')->generate($examp);
 
-        $image1 = imagecreatefromstring(file_get_contents($image1));
-        $image2 = imagecreatefromstring(file_get_contents($image2));
+        dd($qrcode);
 
-        // imagecopymerge($image1,$image2,100,100,200,200,$width,$height,150);
-        imagecopymerge($image1, $image2, 100, 100 , 0, 0, 200 , 200 , 100);
-        header('Content-Type:image/jpg');
-        imagepng($image1);
+        $wmQris = Image::make('images/qris.png');
+        $wmQris->resize(100, 50);
 
-        $masterImg = imagejpeg($image1,'merged.png');
+        $canvas = Image::canvas(500, 500);
 
-        dd($masterImg);
+        $canvas->insert($qrcodes, 'center' );
+        $canvas->insert($wmQris, 'top' );
+
+        // $canvas->insert('images/qris.png', 'bottom-right', 10, 10);
+
+        $canvas->save('images/hasil.jpg');
+
+        return Image::make($canvas)->response();
+        
     }
 
+    
     /**
      * Remove the specified resource from storage.
      *
