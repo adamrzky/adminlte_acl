@@ -80,7 +80,7 @@
                     <select class="form-control col-3" name="MERCHANT_TYPE">
 						<option selected >  Select --- </option>
 						@foreach ($getMcc as $dropdown)
-                        <option >  {{ $dropdown->CODE_MCC }} </option>
+                        <option >  {{ $dropdown->CODE_MCC }} - {{ $dropdown->DESC_MCC }}   </option>
 						@endforeach
                     </select>
                 </div>
@@ -102,10 +102,10 @@
 		            <strong>Criteria  : </strong>
                     <select class="form-control col-3" name="CRITERIA">
                         <option selected> Select -- </option>
-                        <option> UMI </option>
-                        <option> UKE </option>
-                        <option> UME </option>
-                        <option> UBE </option>
+                        <option> UMI - Usaha Mikro </option>
+                        <option> UKE - Usaha Kecil </option>
+                        <option> UME - Usaha Menengah </option>
+                        <option> UBE - Usaha Besar </option>
                     </select>
 		        </div>
 				<div class="form-group"> 

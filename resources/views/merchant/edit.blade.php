@@ -40,15 +40,15 @@
     
 
  
-    <form action="{{ route('merchants.update',$merchant->ID) }}" method="POST"> 
+    <form action="{{ route('merchant.update',$merchant->ID) }}" method="POST"> 
     	@csrf
         @method('PUT')
        
-         <div class="row">
+        <div class="row">
 		    <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Merchant City:</strong>
-                     <input name="MERCHANT_CITY" value="{{ $merchant->MERCHANT_CITY }}" class="form-control col-3" placeholder="city" >
+                     <input name="MERCHANT_CITY" value="{{ $merchant->MERCHANT_CITY }}" class="form-control col-3"   >
                     </div>
                   
                      <strong>Name:</strong>

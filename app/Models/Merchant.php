@@ -12,6 +12,7 @@ class Merchant extends Model
     // protected $connection = 'mysql2';
     // protected $table = 'QRIS_MERCHANT';
     protected $table = 'qris_merchant_2';
+    public $timestamps = false;
     
    
 

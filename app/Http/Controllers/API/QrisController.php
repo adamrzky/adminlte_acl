@@ -304,7 +304,7 @@ class QrisController extends Controller
 
         // $image1 = storage_path('images\qris.png');
         // $image2 = QrCode::size(400)->generate($qris);
-        $combine = base64_encode(QrCode::format('png')->merge('\storage\images\qris.png')->generate($qris));
+        // $combine = base64_encode(QrCode::format('png')->merge('\storage\images\qris.png')->generate($qris));
 
         // // dd($image1);
         // list($width,$height) = getimagesize($image1);
