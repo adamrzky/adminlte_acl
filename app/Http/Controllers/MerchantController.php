@@ -43,18 +43,10 @@ class MerchantController extends Controller
      */
     public function create(Mcc $mcc)
     {
-        $getMcc = Mcc::all();
-        $uuid = Str::uuid();
-        $cstmUuid = str_replace('ID-', ' ' , $uuid);
-        $custom_id = 'ID-' . rand(000000000000, 9999999999999);
-        
-        // dd($custom_id);
-            
-    
-      
+        $getMcc = Mcc::orderBy('DESC_MCC')->get();
+        $custom_id = 'ID' . mt_rand(000000000000, 9999999999999);
 
-    //    dd($mcc);
-    //    return view('merchant.creates',compact('merchant'));
+        // dd($getMcc);
 
     return view('merchant.create',compact('getMcc' , 'custom_id'));
 
@@ -74,15 +66,15 @@ class MerchantController extends Controller
             // 'ID' => '',
             // 'CREATED_AT' => 'required',
             // 'UPDATED_AT' => 'required',
-            // 'TERMINAL_LABEL' => 'required',
+            'TERMINAL_LABEL' => 'required',
             'MERCHANT_COUNTRY' => 'required' ,
-            // 'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
-            // 'TYPE_QR' => 'required', 
+            'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
+            'TYPE_QR' => 'required', 
             'MERCHANT_NAME' => 'required',
             'MERCHANT_CITY' => 'required',
-            // 'POSTAL_CODE' => 'required',
-            // 'MERCHANT_CURRENCY_CODE' => '',
-            // 'MERCHANT_TYPE' => 'required',
+            'POSTAL_CODE' => 'required',
+            'MERCHANT_CURRENCY_CODE' => 'required',
+            'MERCHANT_TYPE' => 'required',
             'MERCHANT_ID' => 'required',
             'REKENING_NUMBER' => 'required',
             'CATEGORY' => 'required',
@@ -92,6 +84,7 @@ class MerchantController extends Controller
         ]);
     
         Merchant::create($request->all());
+        
         
         return redirect()->route('merchant.index')
                         ->with('success','Merchant created successfully.');
@@ -106,17 +99,12 @@ class MerchantController extends Controller
      */
     public function show(Merchant $merchant, $id)
     {
-        // $id = Crypt::decrypt($id);
+        $id = Crypt::decrypt($id);
         $merchant = Merchant::where('id', $id)->first();
         return view('merchant.show', compact('merchant'));
     }
 
-    // public function broadcast(Merchant $merchant, $id)
-    // {
-    //     $id = Crypt::decrypt($id);
-    //     $merchant = Merchant::where('id', $id)->first();
-    //     return view('merchants.show', compact('merchant'));
-    // }
+
     
     /**
      * Show the form for editing the specified resource.
@@ -130,7 +118,7 @@ class MerchantController extends Controller
     // }
     public function edit(Merchant $merchant, $id)
     {
-        // $id = Crypt::decrypt($id);
+        $id = Crypt::decrypt($id);
         $merchant = Merchant::where('id', $id)->first();
         return view('merchant.edit', compact('merchant'));
     }
@@ -145,29 +133,27 @@ class MerchantController extends Controller
     public function update(Request $request, Merchant $merchant)
     {
         request()->validate([
-            // 'ID' => '',
-            'CREATED_AT' => '',
-            'UPDATED_AT' => '',
-            // 'TERMINAL_LABEL' => '',
-            'MERCHANT_COUNTRY' => '',
-            // 'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
-            // 'TYPE_QR' => 'required', 
-            'MERCHANT_NAME' => '',  
-            'MERCHANT_CITY' => '',
-            'POSTAL_CODE' => '',
-            'MERCHANT_CURRENCY_CODE' => '',
-            // 'MERCHANT_TYPE' => 'required',
-            'MERCHANT_ID' => '',
-            'REKENING_NUMBER' => '',
-            'CATEGORY' => '',
-            'CRITERIA' => '',
-            'STATUS' => '',
-            'MERCHANT_ADDRESS' => ''
+            'TERMINAL_LABEL' => 'required',
+            'MERCHANT_COUNTRY' => 'required',
+            'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
+            'TYPE_QR' => 'required', 
+            'MERCHANT_NAME' => 'required',  
+            'MERCHANT_CITY' => 'required',
+            'POSTAL_CODE' => 'required',
+            'MERCHANT_CURRENCY_CODE' => 'required',
+            'MERCHANT_TYPE' => 'required',
+            'MERCHANT_ID' => 'required',
+            'REKENING_NUMBER' => 'required',
+            'CATEGORY' => 'required',
+            'CRITERIA' => 'required',
+            'STATUS' => 'required',
+            'MERCHANT_ADDRESS' => 'required'
         ]);
         
+        // $request = Merchant::find->();
+        // $request->update($merchant);
         
-        
-        $merchant->save($request->all());
+        $merchant->save($request->all());   
         // dd($merchant); 
     
         return redirect()->route('merchant.index')

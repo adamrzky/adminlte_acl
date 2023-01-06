@@ -61,10 +61,10 @@
 	        <td>{{ $row->MERCHANT_CITY }}</td>
 	        <td>
                 <form method="POST">
-                    <a class="btn btn-info" href="{{ route('merchant.show', ($row->ID) ) }}">Detail</a>
+                    <a class="btn btn-info" href="{{ route('merchant.show', Crypt::encrypt($row->ID)) }}">Detail</a>
                     
                     @can('merchant-edit')
-                    <a class="btn btn-primary" href="{{ route('merchant.edit',($row->ID) ) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('merchant.edit',Crypt::encrypt($row->ID)) }}">Edit</a>
                     @endcan
 
                    
