@@ -32,46 +32,50 @@
             <strong>Whoops!</strong> There were some problems with your input.<br><br>
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
-    @endif
-    
+        @endif
+        
+        
+        
+        <form action="{{ route('merchant.update',$merchant->ID) }}" method="POST"> 
+            @csrf
+            @method('PUT')
+            
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
 
- 
-    <form action="{{ route('merchant.update',$merchant->ID) }}" method="POST"> 
-    	@csrf
-        @method('PUT')
-       
-        <div class="row">
-		    <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Merchant City:</strong>
+                     <strong>MERCHANT_ID:</strong>
+                     <input type="text" name="MERCHANT_ID" value="{{ $merchant->MERCHANT_ID }}" class="form-control col-3" readonly>
+
+                     <strong>Merchant City:</strong>
                      <input name="MERCHANT_CITY" value="{{ $merchant->MERCHANT_CITY }}" class="form-control col-3"   >
-                    </div>
+                    
                   
                      <strong>Name:</strong>
                      <input type="text" name="MERCHANT_NAME" value="{{ $merchant->MERCHANT_NAME }}" class="form-control col-3" >
-
-
+                     
+                     
                      <strong>Merchant Curency:</strong>
-                    <input type="text" name="TERMINAL_LABEL" value="{{ $merchant->TERMINAL_LABEL }}"  class="form-control col-3" >
-                       
+                     <input type="text" name="TERMINAL_LABEL" value="{{ $merchant->TERMINAL_LABEL }}"  class="form-control col-3" >
+                     
                 
               
             
            
                 
-                    <strong>Kode Pos:</strong>
+                     <strong>Kode Pos:</strong>
                      <input type="text" name="POSTAL_CODE" value="{{ $merchant->POSTAL_CODE }}" class="form-control col-3" >
               
             
            
                 
-                    <strong>Merchant Curency:</strong>
+                     <strong>Merchant Curency:</strong>
                      <input type="text" name="MERCHANT_CURRENCY_CODE" value="{{ $merchant->MERCHANT_CURRENCY_CODE }}" class="form-control col-3" >
-              
+                     
             
            
                 
@@ -105,8 +109,6 @@
             
            
                 
-                    <strong>MERCHANT_ID:</strong>
-                     <input type="text" name="MERCHANT_ID" value="{{ $merchant->MERCHANT_ID }}" class="form-control col-3" >
               
             
            

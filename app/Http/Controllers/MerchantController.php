@@ -160,26 +160,6 @@ class MerchantController extends Controller
                         ->with('success','Merchant updated successfully');
     }
     
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  \App\Merchant  $merchant
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy(Merchant $merchant)
-    // {
-    //     $qris_merchant->delete();
-    
-    //     return redirect()->route('merchants.index')
-    //                     ->with('success','Merchant deleted successfully');
-    // }
 
-    // public function getMcc(Mcc $mcc)
-    // {
-    //    $mcc = Mcc::all();
-    // //    dd($mcc);
-    //    return view('merchant.creates',compact('merchant'));
-       
-    // }
     
 }
