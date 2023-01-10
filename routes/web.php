@@ -68,10 +68,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::delete('/permissions/{permission}/destroy', 'PermissionController@destroy')->name('permissions.destroy');
 
     //TestAPI
-    Route::get('/qris', 'API\QrisController@index')->name('qris.index');
-    Route::post('/qris/hit', 'API\QrisController@hit')->name('qris.hit');
-    Route::get('/qris/img', 'API\QrisController@mergeImg')->name('qris.mergeImg');
-    Route::get('/qris/test', 'API\QrisController@testing')->name('qris.testing');
+    Route::get('/qris', 'QrisController@index')->name('qris.index');
+    Route::post('/qris/hit', 'QrisController@hit')->name('qris.hit');
 
 
     //Merchant
