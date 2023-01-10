@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Merchant;
 use App\Models\Mcc;
 use Illuminate\Http\Request;
@@ -16,27 +17,27 @@ class MerchantController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:merchant-list|merchant-create|merchant-edit|merchant-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:merchant-create', ['only' => ['create','store']]);
-        $this->middleware('permission:merchant-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:merchant-list|merchant-create|merchant-edit|merchant-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:merchant-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:merchant-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:merchant-delete', ['only' => ['destroy']]);
     }
-    
+
     public function index()
     {
         $merchant = Merchant::latest()->paginate(5);
 
         // dd($merchant);
 
-        return view('merchant.index',compact('merchant'))
+        return view('merchant.index', compact('merchant'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-   
-        
-      
-        
-        /**
+
+
+
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -44,14 +45,15 @@ class MerchantController extends Controller
     public function create(Mcc $mcc)
     {
         $getMcc = Mcc::orderBy('DESC_MCC')->get();
-        $custom_id = 'ID' . mt_rand(000000000000, 9999999999999);
+        $digits = '';
+        for ($i = 0; $i < 13; $i++) {
+            $digits .= rand(0, 9);
+        }
+        $custom_id = 'ID' . $digits;
 
-        // dd($getMcc);
-
-    return view('merchant.create',compact('getMcc' , 'custom_id'));
-
+        return view('merchant.create', compact('getMcc', 'custom_id'));
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -67,9 +69,9 @@ class MerchantController extends Controller
             // 'CREATED_AT' => 'required',
             // 'UPDATED_AT' => 'required',
             'TERMINAL_LABEL' => 'required',
-            'MERCHANT_COUNTRY' => 'required' ,
+            'MERCHANT_COUNTRY' => 'required',
             'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
-            'TYPE_QR' => 'required', 
+            'TYPE_QR' => 'required',
             'MERCHANT_NAME' => 'required',
             'MERCHANT_CITY' => 'required',
             'POSTAL_CODE' => 'required',
@@ -82,15 +84,14 @@ class MerchantController extends Controller
             'STATUS' => 'required',
             'MERCHANT_ADDRESS' => 'required'
         ]);
-    
+
         Merchant::create($request->all());
-        
-        
+
+
         return redirect()->route('merchant.index')
-                        ->with('success','Merchant created successfully.');
-                       
+            ->with('success', 'Merchant created successfully.');
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -105,7 +106,7 @@ class MerchantController extends Controller
     }
 
 
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -122,7 +123,7 @@ class MerchantController extends Controller
         $merchant = Merchant::where('id', $id)->first();
         return view('merchant.edit', compact('merchant'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -136,8 +137,8 @@ class MerchantController extends Controller
             'TERMINAL_LABEL' => 'required',
             'MERCHANT_COUNTRY' => 'required',
             'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
-            'TYPE_QR' => 'required', 
-            'MERCHANT_NAME' => 'required',  
+            'TYPE_QR' => 'required',
+            'MERCHANT_NAME' => 'required',
             'MERCHANT_CITY' => 'required',
             'POSTAL_CODE' => 'required',
             'MERCHANT_CURRENCY_CODE' => 'required',
@@ -149,17 +150,17 @@ class MerchantController extends Controller
             'STATUS' => 'required',
             'MERCHANT_ADDRESS' => 'required'
         ]);
-        
+
         // $request = Merchant::find->();
         // $request->update($merchant);
-        
-        $merchant->save($request->all());   
+
+        $merchant->save($request->all());
         // dd($merchant); 
-    
+
         return redirect()->route('merchant.index')
-                        ->with('success','Merchant updated successfully');
+            ->with('success', 'Merchant updated successfully');
     }
-    
+
     // /**
     //  * Remove the specified resource from storage.
     //  *
@@ -169,7 +170,7 @@ class MerchantController extends Controller
     // public function destroy(Merchant $merchant)
     // {
     //     $qris_merchant->delete();
-    
+
     //     return redirect()->route('merchants.index')
     //                     ->with('success','Merchant deleted successfully');
     // }
@@ -179,7 +180,7 @@ class MerchantController extends Controller
     //    $mcc = Mcc::all();
     // //    dd($mcc);
     //    return view('merchant.creates',compact('merchant'));
-       
+
     // }
-    
+
 }
