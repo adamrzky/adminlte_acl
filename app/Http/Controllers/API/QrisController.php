@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +16,7 @@ use Image;
 
 class QrisController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +24,7 @@ class QrisController extends Controller
      */
     public function index()
     {
-        return view('qris.index');
+        // return view('qris.index');
     }
 
     /**
@@ -45,9 +46,7 @@ class QrisController extends Controller
                         "AMOUNT" => $request->param['MPI']['AMOUNT']
                     ]
                 ];
-
                 break;
-
             case '2':
                 $data = [
                     "MPI" => [
@@ -56,7 +55,6 @@ class QrisController extends Controller
                     ]
                 ];
                 break;
-
             case '3':
                 $data = [
                     "MPI" => [
@@ -65,7 +63,6 @@ class QrisController extends Controller
                     ]
                 ];
                 break;
-
             case '4':
                 $data = [
                     "MPI" => [
@@ -74,7 +71,6 @@ class QrisController extends Controller
                     ]
                 ];
                 break;
-
             case '5':
                 $data = [
                     "MPI" => [
@@ -83,7 +79,6 @@ class QrisController extends Controller
                     ]
                 ];
                 break;
-
             case '6':
                 $data = [
                     "MPI" => [
@@ -92,7 +87,6 @@ class QrisController extends Controller
                     ]
                 ];
                 break;
-
             case '7':
                 $data = [
                     "MPI" => [
@@ -102,7 +96,6 @@ class QrisController extends Controller
                     ]
                 ];
                 break;
-
             case '8':
                 $data = [
                     "MPI" => [
@@ -112,7 +105,6 @@ class QrisController extends Controller
                     ]
                 ];
                 break;
-
             case '9':
                 $data = [
                     "MPI" => [
@@ -122,7 +114,6 @@ class QrisController extends Controller
                     ]
                 ];
                 break;
-
             default:
                 $data = [];
                 break;
@@ -130,25 +121,32 @@ class QrisController extends Controller
 
         Log::channel('apilog')->info('REQ SEND API : ' .  json_encode($data));
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post(
-            'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
-            $data
-        );
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post(
+                'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
+                $data
+            );
 
-        Log::channel('apilog')->info('RESP SEND API : ' . json_encode($response->json()));
+            Log::channel('apilog')->info('RESP SEND API : ' . json_encode($response->json()));
 
-        $qris = $response['MPO']['QRIS'];
-        $qrcode = QrCode::size(400)->generate($qris);
+            $res = $response->json();
+            if ($response['RC'] == '0000') {
+                $qris = $response['MPO']['QRIS'];
+                $qrcode = QrCode::size(400)->generate($qris);
+                // $detail = $this->parsingQrCodeASPI($qris);
+                $res['MPO']['QR'] = base64_encode($qrcode);
 
-        $res = $response->json();
-        // $detail = $this->parsingQrCodeASPI($qris);
-        // $res['MPO']['NNS'] = base64_encode($qrcode);
-        // $res['MPO']['NMID'] = base64_encode($qrcode);
-        $res['MPO']['QR'] = base64_encode($qrcode);
-
-        Log::channel('apilog')->info('RESP : ' . json_encode($res));
+                Log::channel('apilog')->info('RESP : ' . json_encode($res));
+            } else {
+                $res = $response->json();
+                Log::channel('apilog')->info('RESP : ' . json_encode($res));
+            }
+        } catch (\Throwable $th) {
+            Log::channel('apilog')->info('RESP SEND API : ' . $th->getMessage());
+            Log::channel('apilog')->info('RESP : ' . $th->getMessage());
+        }
 
         return response()->json($res);
     }
@@ -165,14 +163,13 @@ class QrisController extends Controller
             $tLengthData = substr($qris, 0, 2);
             $qris = substr($qris, 2);
 
-            // //Get Data Value
+            //Get Data Value
             $tLengthDataInt = intval($tLengthData);
             $tValue = substr($qris, 0, $tLengthDataInt);
             $qris = substr($qris, $tLengthDataInt);
 
             $additional = ['26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '51', '62'];
             if (in_array($tIDKey, $additional) && $pIsNested) {
-                // tResult . put(tIDKey, parsingQrCodeASPI(tValue, false));
                 $tResult[$tIDKey] = $this->parsingQrCodeASPI($tValue, false);
             } else {
                 $tResult[$tIDKey] = $tValue;
@@ -180,17 +177,5 @@ class QrisController extends Controller
         }
 
         return $tResult;
-    }
-
-    
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy()
-    {
-        //
     }
 }
