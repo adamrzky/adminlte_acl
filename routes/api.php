@@ -26,8 +26,6 @@ Route::group(['middleware' => ['cors']], function () {
     Route::group(['middleware' => ['check.auth']], function () {
         Route::get('/product', 'API\ProductController@index')->name('api.product');
         Route::post('/qris', 'API\QrisController@store')->name('api.qris');
-        // Route::post('/qris/hit', 'API\QrisController@hit')->name('api.qris.hit');
-        Route::post('/qris/img', 'API\QrisController@mergeImg')->name('api.qris.img');
     });
 
 });
