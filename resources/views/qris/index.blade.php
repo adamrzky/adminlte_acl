@@ -164,7 +164,7 @@ $(function() {
                     // $("#response").html(response);
                     $("#modalQr").modal('show');
                     // $('#modal-body-isi').html(response.qr);
-                    $('#previewQr').html(`<img src="data:image/svg+xml;base64,`+response.qr+`" \>`);
+                    $('#previewQr').html(`<img src="data:image/jpeg;base64,`+response.qr+`" \>`);
                     // $('#previewQr').attr("img_src", $(response.qr).val());
                     // $("#previewQr").attr('src',+response.qr+);
                     // $("#previewQr").html('<img src="' + response.qr + '" />');

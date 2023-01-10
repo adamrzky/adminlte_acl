@@ -300,35 +300,42 @@ class QrisController extends Controller
 
         $qris = ($response['MPO']['QRIS']);
 
+        //qrcode
+        $qrcode =  base64_encode(QrCode::format('png')->size(200)->generate($qris));
+    
+        //qrispng
+        $wmQris = Image::make('images/qris.png');
+        $wmQris->resize(100, 50);
+        
+        //getPngQRCode
+        $wmQrcode = Image::make($qrcode);
+        $wmQrcode->resize(100, 50);
+        
+        //canvas
+        $canvas = Image::canvas(400, 400);
 
+        //insertToCanvas
+        $canvas->insert($wmQris, 'top' );
+        $canvas->insert($qrcode, 'center' );
+        $canvas->text('NMID : xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ', 100, 350, function($font) {
+        
+            $font->size(50);
 
-        // $image1 = storage_path('images\qris.png');
-        // $image2 = QrCode::size(400)->generate($qris);
-        // $combine = base64_encode(QrCode::format('png')->merge('\storage\images\qris.png')->generate($qris));
+        });
+        
+        $canvas->save('images/hasil2.jpg');
+        
 
-        // // dd($image1);
-        // list($width,$height) = getimagesize($image1);
+        $base64 = base64_encode($canvas);
+        // dd($base64);
 
-        // $image1 = imagecreatefrompng($image1);
-        // $image2 = imagecreatefromjpeg($image2);
-
-        // imagecopymerge($image1,$image2,40,100,0,0,$width,$height,100);
-        // header('Content-Type:image/jpg');
-        // imagepng($image1);
-
-        // imagepng($image1,'merged.png');
-        // $masterImg = imagepng($image1,'merged.png');
-
-        // $combine =  base64_encode(QrCode::size(200)->generate($qris));
-
-        $qris = ($response['MPO']['QRIS']);
-        $combine =  base64_encode(QrCode::size(200)->generate($qris));
-      
         return response()->json([
             'data'    => $response['MPO']['QRIS'],
-            'qr' => $combine,
+            'qr' => $base64,
 
         ]);
+
+        
     }
 
 
@@ -339,48 +346,53 @@ class QrisController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function mergeImg()
-    {
-        $logo_file = storage_path('images\qris.png');
-        $image_file = storage_path('images\qris2.jpg');
-        $targetfile = storage_path('images\img2.png');
-        $photo = imagecreatefromjpeg($image_file);
-        $fotoW = imagesx($photo);
-        $fotoH = imagesy($photo);
-        $logoImage = imagecreatefrompng($logo_file);
-        $logoW = imagesx($logoImage);
-        $logoH = imagesy($logoImage);
-        $photoFrame = imagecreatetruecolor($fotoW, $fotoH);
-        $dest_x = $fotoW - $logoW;
-        $dest_y = $fotoH - $logoH;
-        imagecopyresampled($photoFrame, $photo, 0, 0, 0, 0, $fotoW, $fotoH, $fotoW, $fotoH);
-        imagecopy($photoFrame, $logoImage, $dest_x, $dest_y, 0, 0, $logoW, $logoH);
-        imagejpeg($photoFrame, $targetfile);
-        echo '<img src="' . $targetfile . '" />';
-        die;
+
+
+  public function testing()
+  {
+    $qris = "00020101021251260014ID.CO.QRIS.WWW0204111152045812530336055020357030.15802ID5913NamaMerchant76009NamaKota7610925441234962070703K1963041377";
+
+       //qrcode
+       $qrcode =  base64_encode(QrCode::format('png')
+       ->size(200)
+       ->generate($qris));
        
+       //qrispng
+       $wmQris = Image::make('images/qris.png');
+       $wmQris->resize(100, 50);
+       
+       //getPngQRCode
+       $wmQrcode = Image::make($qrcode);
+       $wmQrcode->resize(100, 50);
+       
+       //canvas
+       $canvas = Image::canvas(500, 500);
+   
+       //insertToCanvas
+       $canvas->insert($wmQris, 'top' );
+       $canvas->insert($qrcode, 'center' );
+     
+       
+       $canvas->save('images/hasil2.jpg');
+       
+       
+       $hasilcanvas = Image::make($canvas);
+       
+       $hasilcanvas->save('images/hasilcanvas.jpg');
+   
+       dd($canvas);
+       $base64 = base64_encode(file_get_contents($hasilcanvas));
+   
+       // return Image::make($canvas)->response();
+   
+       return response()->json([
+           // 'data'    => $response['MPO']['QRIS'],
+           'qr' => $base64,
+   
+       ]);
 
-        // $qrcode = QrCode::size(400)->generate($examp);
-        $examp ='adam';
-        $qrcodes = QrCode::format('png')->generate($examp);
+  }
 
-        dd($qrcode);
-
-        $wmQris = Image::make('images/qris.png');
-        $wmQris->resize(100, 50);
-
-        $canvas = Image::canvas(500, 500);
-
-        $canvas->insert($qrcodes, 'center' );
-        $canvas->insert($wmQris, 'top' );
-
-        // $canvas->insert('images/qris.png', 'bottom-right', 10, 10);
-
-        $canvas->save('images/hasil.jpg');
-
-        return Image::make($canvas)->response();
-        
-    }
 
     
     /**
