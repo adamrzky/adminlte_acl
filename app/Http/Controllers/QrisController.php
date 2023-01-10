@@ -12,6 +12,7 @@ use Intervention\Image\ImageManager;
 use Image;
 
 
+
 class QrisController extends Controller
 {
     
@@ -152,7 +153,7 @@ class QrisController extends Controller
         $nmid = ($response['MPO']['NMID']);
         
         //qrcode
-        $qrcode =  base64_encode(QrCode::format('png')->size(200)->generate($qris));
+        $qrcode =  base64_encode(QrCode::format('png')->size(280)->generate($qris));
     
         //qrispng
         $wmQris = Image::make('images/qris.png');
@@ -168,11 +169,10 @@ class QrisController extends Controller
         //insertToCanvas
         $canvas->insert($wmQris, 'top' );
         $canvas->insert($qrcode, 'center' );
-        $canvas->text('NMID : ' .$nmid  , 150 , 350, function($font) {
-        
-            $font->size(50);
-
-        });
+        $canvas->text('NMID : ' .$nmid  , 100 , 375, function($font) {  
+            $font->file(storage_path('font/font3.ttf'));  
+            $font->size(15);   
+        });  
         
         $canvas->save('images/hasil2.jpg');
         
@@ -189,6 +189,7 @@ class QrisController extends Controller
         
     }
 
+    
 
     /**
      * Update the specified resource in storage.
