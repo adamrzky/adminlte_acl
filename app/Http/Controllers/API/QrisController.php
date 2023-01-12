@@ -132,11 +132,36 @@ class QrisController extends Controller
             Log::channel('apilog')->info('RESP SEND API : ' . json_encode($response->json()));
 
             $res = $response->json();
-            if ($response['RC'] == '0000') {
-                $qris = $response['MPO']['QRIS'];
-                $qrcode = QrCode::size(400)->generate($qris);
+            if ($res['RC'] == '0000') {
+                $qris = $res['MPO']['QRIS'];
+                $nmid = $res['MPO']['NMID'];
+                // $qrcode = QrCode::size(400)->generate($qris);
+                $qrcode = base64_encode(QrCode::format('png')->size(200)->generate($qris));
+
+                //qrispng
+                $wmQris = Image::make('images/qris.png');
+                $wmQris->resize(200, 70);
+
+                //getPngQRCode
+                // $wmQrcode = Image::make($qrcode);
+                // $wmQrcode->resize(100, 50);
+
+                //canvas
+                $canvas = Image::canvas(300, 350, '#ffff');
+
+                //insertToCanvas
+                $canvas->insert($wmQris, 'top', 10, 10);
+                $canvas->insert($qrcode, 'center', 0, 20);
+                $canvas->text('NMID : ' . $nmid, 50, 330, function ($font) {
+                    $font->file(storage_path('font/font3.ttf'));
+                    $font->size(12);
+                });
+
+                $canvas->save('images/hasil.png');
+
+                $base64 = base64_encode($canvas);
                 // $detail = $this->parsingQrCodeASPI($qris);
-                $res['MPO']['QR'] = base64_encode($qrcode);
+                $res['MPO']['QR'] = $base64;
 
                 Log::channel('apilog')->info('RESP : ' . json_encode($res));
             } else {
@@ -177,5 +202,155 @@ class QrisController extends Controller
         }
 
         return $tResult;
+    }
+
+    public function hit(Request $request)
+    {
+        // dd($request);
+
+        // Log::channel('weblog')->info('req : ' . $request);
+        // dd($request->all());
+        switch ($request->qrType) {
+            case '1':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT']
+                    ]
+                ];
+
+                break;
+
+            case '2':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT']
+                    ]
+                ];
+                break;
+
+            case '3':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT']
+                    ]
+                ];
+                break;
+
+            case '4':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT']
+                    ]
+                ];
+                break;
+
+            case '5':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT']
+                    ]
+                ];
+                break;
+
+            case '6':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT']
+                    ]
+                ];
+                break;
+
+            case '7':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT'],
+                        "TIP_INDICATOR" => $request['TIP_INDICATOR']
+                    ]
+                ];
+                break;
+
+            case '8':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT'],
+                        "FEE_AMOUNT" => $request['FEE_AMOUNT']
+                    ]
+                ];
+                break;
+
+            case '9':
+                $data = [
+                    "MPI" => [
+                        "MERCHANT_ID" => $request['MERCHANT_ID'],
+                        "AMOUNT" => $request['AMOUNT'],
+                        "FEE_AMOUNT_PERCENTAGE" => $request['FEE_AMOUNT_PERCENTAGE']
+                    ]
+                ];
+                break;
+
+
+
+            default:
+                $data = [];
+                break;
+        }
+
+        // dd($data);
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post(
+            'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
+            $data
+        );
+
+
+        // dd($data);
+
+        Log::channel('weblog')->info('resp api : ' . $response);
+
+        $qris = ($response['MPO']['QRIS']);
+        $nmid = ($response['MPO']['NMID']);
+
+        //qrcode
+        $qrcode =  base64_encode(QrCode::format('png')->size(280)->generate($qris));
+
+        //qrispng
+        $wmQris = Image::make('images/qris.png');
+        $wmQris->resize(100, 50);
+
+        //getPngQRCode
+        $wmQrcode = Image::make($qrcode);
+        $wmQrcode->resize(100, 50);
+
+        //canvas
+        $canvas = Image::canvas(400, 400);
+
+        //insertToCanvas
+        $canvas->insert($wmQris, 'top');
+        $canvas->insert($qrcode, 'center');
+        $canvas->text('NMID : ' . $nmid, 100, 375, function ($font) {
+            $font->file(storage_path('font/font3.ttf'));
+            $font->size(15);
+        });
+
+        $canvas->save('images/hasil2.jpg');
+
+
+        $base64 = base64_encode($canvas);
+        // dd($base64);
+
+        return response()->json([
+            'data'    => $response['MPO']['QRIS'],
+            'qr' => $base64,
+
+        ]);
     }
 }

@@ -47,8 +47,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/users/store', 'UserController@store')->name('users.store');
     Route::delete('/users/{product}/destroy', 'UserController@destroy')->name('users.destroy');
 
-    //Role  
-    
+    //Role
     Route::get('/roles', 'RoleController@index')->name('roles.index');
     Route::get('/roles/show/{id}', 'RoleController@show')->name('roles.show');
     Route::get('/roles/{id}/edit', 'RoleController@edit')->name('roles.edit');
@@ -56,7 +55,6 @@ Route::group(['middleware' => ['auth']], function() {
     Route::patch('/roles/update/{product}', 'RoleController@update')->name('roles.update');
     Route::post('/roles/store', 'RoleController@store')->name('roles.store');
     Route::delete('/roles/{product}/destroy', 'RoleController@destroy')->name('roles.destroy');
-
 
     //Permissions
     Route::get('/permissions', 'PermissionController@index')->name('permissions.index');
@@ -67,10 +65,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/permissions/store', 'PermissionController@store')->name('permissions.store');
     Route::delete('/permissions/{permission}/destroy', 'PermissionController@destroy')->name('permissions.destroy');
 
-    //TestAPI
+    //Generate QRIS
     Route::get('/qris', 'QrisController@index')->name('qris.index');
     Route::post('/qris/hit', 'QrisController@hit')->name('qris.hit');
-
 
     //Merchant
     Route::get('/merchant', 'MerchantController@index')->name('merchant.index');
@@ -80,6 +77,4 @@ Route::group(['middleware' => ['auth']], function() {
     Route::put('/merchant/update/{merchant}', 'MerchantController@update')->name('merchant.update');
     Route::post('/merchant/store', 'MerchantController@store')->name('merchant.store');
     Route::delete('/merchant/{merchant}/destroy', 'MerchantController@destroy')->name('merchant.destroy');
-
-
 });

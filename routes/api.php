@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['cors']], function () {
     //
     Route::post('/register', 'API\AuthController@register');
-    Route::post('/gettoken', 'API\AuthController@getToken');
+    Route::post('/gettoken', 'API\AuthController@getToken')->name('gettoken');
 
     Route::group(['middleware' => ['check.auth']], function () {
         Route::get('/product', 'API\ProductController@index')->name('api.product');
