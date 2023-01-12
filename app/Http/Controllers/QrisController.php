@@ -10,12 +10,11 @@ use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Intervention\Image\ImageManager;
 use Image;
-
-
+use Illuminate\Support\Facades\Route;
 
 class QrisController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -26,170 +25,56 @@ class QrisController extends Controller
         return view('qris.index');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        
-    }
-
     public function hit(Request $request)
     {
-        // dd($request);
-        
         // Log::channel('weblog')->info('req : ' . $request);
-        // dd($request->all());
-        switch ($request->qrType) {
-            case '1':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT']
-                    ]
-                ];
+        $data = $request->toArray();
 
-                break;
-
-            case '2':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT']
-                    ]
-                ];
-                break;
-
-            case '3':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT']
-                    ]
-                ];
-                break;
-
-            case '4':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT']
-                    ]
-                ];
-                break;
-
-            case '5':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT']
-                    ]
-                ];
-                break;
-
-            case '6':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT']
-                    ]
-                ];
-                break;
-
-            case '7':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT'],
-                        "TIP_INDICATOR" => $request['TIP_INDICATOR']
-                    ]
-                ];
-                break;
-
-            case '8':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT'],
-                        "FEE_AMOUNT" => $request['FEE_AMOUNT']
-                    ]
-                ];
-                break;
-
-            case '9':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request['MERCHANT_ID'],
-                        "AMOUNT" => $request['AMOUNT'],
-                        "FEE_AMOUNT_PERCENTAGE" => $request['FEE_AMOUNT_PERCENTAGE']
-                    ]
-                ];
-                break;
-
-
-
-            default:
-                $data = [];
-                break;
-        }
-
-        // dd($data);
-        $response = Http::withHeaders([
+        $token = Http::timeout(5)->withHeaders([
             'Content-Type' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
         ])->post(
-            'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
-            $data
+            route('gettoken'),
+            [
+                "email" => "admin@gmail.com",
+                "password" => "123456"
+            ]
         );
 
+        // $response = Http::withHeaders([
+        //     'Content-Type' => 'application/json',
+        // ])->post(
+        //     'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
+        //     $data
+        // );
 
-        // dd($data);
+        // $request = Request::create('api/gettoken', 'POST', [
+        //     "email" => "admin@gmail.com",
+        //     "password" => "123456"
+        // ]);
+        // $request->headers->set('Content-Type', 'application/json');
 
-        Log::channel('weblog')->info('resp api : ' . $response);
-        
-        $qris = ($response['MPO']['QRIS']);
-        $nmid = ($response['MPO']['NMID']);
-        
-        //qrcode
-        $qrcode =  base64_encode(QrCode::format('png')->size(280)->generate($qris));
-    
-        //qrispng
-        $wmQris = Image::make('images/qris.png');
-        $wmQris->resize(100, 50);
-        
-        //getPngQRCode
-        $wmQrcode = Image::make($qrcode);
-        $wmQrcode->resize(100, 50);
-        
-        //canvas
-        $canvas = Image::canvas(400, 400);
+        // $response = Route::dispatch($request);
 
-        //insertToCanvas
-        $canvas->insert($wmQris, 'top' );
-        $canvas->insert($qrcode, 'center' );
-        $canvas->text('NMID : ' .$nmid  , 100 , 375, function($font) {  
-            $font->file(storage_path('font/font3.ttf'));  
-            $font->size(15);   
-        });  
-        
-        $canvas->save('images/hasil2.jpg');
-        
+        // dd($response);
 
-        $base64 = base64_encode($canvas);
-        // dd($base64);
+        $response = Http::timeout(10)->withHeaders([
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiN2EyODkzM2VjZWFjYmJhNTBkYzM2YzQ5NGY2YzNhMDcwN2Q0OGQ5NDE5ZGVhYWRmZWU4NzFhMDkwYzdiMDFjMWQ2ZGYyY2E0OGMyZjQ0NjciLCJpYXQiOjE2NzM0MDg2NTYsIm5iZiI6MTY3MzQwODY1NiwiZXhwIjoxNjczNDEyMjU2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.aBWwDQdpnWOvzKgAgGswD6p7ND1KlCSHRbGLzVoE164TDt-TFaT2tBzjJQuTrYCBFiNZU-UuwA1Mvtv3iDmv77vc6x1k3g9qp2ABlN2uzTVJ93TKvxVG3JDsrDQHrDd1RQfzMFHAPUSltrPGZJASolq5HnzwdBDk04z9-BqI3TgDHmKsubHH31tPCww1B-rvQIeEMe6DUYAnPB1TIP4KWG8ZkBO4UtIf97Nw05tESz-b7d8Q62-eKceLJS4VJ--m2_6jK9pK9iGPNU2KmfCbtVvi13zCfuEnfiGAQl7_-4ynU4Z2WCTUeal-aL6f6DS_R4tk7Vjw_zBuWF2wFoV1aMAl2lUs8T8copXvhQbskbNdoCdXj1_ZLf_gF8VFvZ8ECnhTx1mZfQqW26jfLtpDBeLYht4X5lIpjdlvgSQ_TizMILQdGRm1W6uTh7o-UxHsdfBoaVtenfLjOHC6caPCunZBjBL4LnGtBkWt91RHoFGEnJjX8ot4dVAaqlNNwBl3Vk4wTIU54j1BewMRhH4PMjJrJMnZgtDxORHdTXd-7UUWwDZATlwUzfnMwb0bz0U4OIaSKnHoWoPzfVZHgXjUZ6pPutiFMgqoGoRzlk_kikDBwLHFmPh3Z8hEyryydanoaUxaL5KoGNDdvxBUv-8jwUSmPUTRymTbNGEbWvndwLE',
+            'Content-Type' => 'application/json',
+        ])->post(
+            'http://127.0.0.1:8000/api/qris',
+            $data
+        );
+        dd($response->json());
+
+        // Log::channel('weblog')->info('resp : ' . $response);
 
         return response()->json([
-            'data'    => $response['MPO']['QRIS'],
-            'qr' => $base64,
-
+            'data'    => $response,
         ]);
-
-        
     }
 
-    
+
 
     /**
      * Update the specified resource in storage.
@@ -202,7 +87,7 @@ class QrisController extends Controller
 
 
 
-    
+
     /**
      * Remove the specified resource from storage.
      *
