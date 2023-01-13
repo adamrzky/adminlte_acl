@@ -56,31 +56,32 @@ $(function() {
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>QR Type :</strong>
-                <input type="number" id="qrType" class="form-control" value="1">
+                <input type="number" id="qrType"  class="form-control col-3" value="1">
             </div>
             <div class="form-group">
                 <strong>MERCHANT_ID:</strong>
-                <input type="number" id="MERCHANT_ID" class="form-control" value="1">
+                <input type="number" id="MERCHANT_ID" class="form-control col-3" value="1">
             </div>
             <div class="form-group">
                 <strong>AMOUNT:</strong>
-                <input type="number" id="AMOUNT" class="form-control" value="1">
+                <input type="number" id="AMOUNT" class="form-control col-3" value="1">
             </div>
             <div class="form-group">
                 <strong>TIP_INDICATOR:</strong>
-                <input type="number" id="TIP_INDICATOR" class="form-control">
+                <input type="number" id="TIP_INDICATOR" class="form-control col-3">
             </div>
             <div class="form-group">
                 <strong>FEE_AMOUNT:</strong>
-                <input type="number" id="FEE_AMOUNT" class="form-control">
+                <input type="number" id="FEE_AMOUNT" class="form-control col-3">
             </div>
             <div class="form-group">
                 <strong>FEE_AMOUNT_PERCENTAGE:</strong>
-                <input type="number" id="FEE_AMOUNT_PERCENTAGE" class="form-control">
+                <input type="number" id="FEE_AMOUNT_PERCENTAGE" class="form-control col-3">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="button" class="btn btn-primary" id="store">Submit</button>
+            <button type="submit" class="btn btn-succes"> Submit</button>
         </div>
     </div>
 </form>
@@ -114,7 +115,7 @@ $(function() {
     $('#store').click(function(e) {
         e.preventDefault();
 
-        //define variable
+        // define variable
         let qrType = $('#qrType').val();
         let MERCHANT_ID = $('#MERCHANT_ID').val();
         let AMOUNT = $('#AMOUNT').val();
@@ -137,12 +138,12 @@ $(function() {
                 "_token": token
             },
             success: function(response) {
-                console.log(response);
+                // console.log(response.qr);
                 // console.log(response.qr);
                 // $("#response").html(response);
                 $("#modalQr").modal('show');
                 // $('#modal-body-isi').html(response.qr);
-                $('#previewQr').html(`<img src="data:image/jpeg;base64,` + response.qr + `" \>`);
+                $('#previewQr').html(`<img src="data:image/png;base64,` + response.qr + `" \>`);
 
                 //show success message
                 // Swal.fire({
