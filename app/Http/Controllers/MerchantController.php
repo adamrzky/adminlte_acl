@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Merchant;
 use App\Models\Mcc;
+use App\Models\MerchantDetails;
+use App\Models\MerchantDomestic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
@@ -27,31 +29,22 @@ class MerchantController extends Controller
     {
         $merchant = Merchant::latest()->paginate(5);
 
-        // dd($merchant);
-
         return view('merchant.index', compact('merchant'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
-
-
-
-
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Mcc $mcc)
+    public function create()
     {
-        $getMcc = Mcc::orderBy('DESC_MCC')->get();
-        $digits = '';
-        for ($i = 0; $i < 13; $i++) {
-            $digits .= rand(0, 9);
-        }
-        $custom_id = 'ID' . $digits;
+        $mcc = Mcc::orderBy('DESC_MCC')->get()->toArray();
+        $criteria = getCriteria();
+        $prov = getWilayah();
 
-        return view('merchant.create', compact('getMcc', 'custom_id'));
+        return view('merchant.create', compact('mcc', 'criteria', 'prov'));
     }
 
     /**
@@ -62,34 +55,66 @@ class MerchantController extends Controller
      */
     public function store(Request $request)
     {
-
         // dd($request);
         request()->validate([
-            // 'ID' => '',
-            // 'CREATED_AT' => 'required',
-            // 'UPDATED_AT' => 'required',
-            'TERMINAL_LABEL' => 'required',
-            'MERCHANT_COUNTRY' => 'required',
-            'QRIS_MERCHANT_DOMESTIC_ID' => 'required',
-            'TYPE_QR' => 'required',
-            'MERCHANT_NAME' => 'required',
-            'MERCHANT_CITY' => 'required',
-            'POSTAL_CODE' => 'required',
-            'MERCHANT_CURRENCY_CODE' => 'required',
-            'MERCHANT_TYPE' => 'required',
-            'MERCHANT_ID' => 'required',
-            'REKENING_NUMBER' => 'required',
-            'CATEGORY' => 'required',
-            'CRITERIA' => 'required',
-            'STATUS' => 'required',
-            'MERCHANT_ADDRESS' => 'required'
+            'norek' => 'required|numeric',
+            'merchant' => 'required',
+            'mcc' => 'required',
+            'criteria' => 'required',
+            'prov' => 'required',
+            'city' => 'required',
+            'address' => 'required',
+            'postalcode' => 'required',
+            'fee' => 'required',
         ]);
 
-        Merchant::create($request->all());
+        try {
+            $date = date('Y-m-d H:i:s');
+            $nmid = 'ID' . genID(13);
+            $domain = 'ID.CO.QRIS.WWW';
+            $data_domestic = [
+                'REVERSE_DOMAIN' => $domain,
+                'NMID' => $nmid,
+                'MCC' => $request->mcc,
+                'CRITERIA' => $request->criteria,
+            ];
+            $id_domestic = MerchantDomestic::create($data_domestic)->id;
 
+            $data_merchant = [
+                'CREATED_AT' => $date,
+                'UPDATED_AT' => '',
+                'TERMINAL_LABEL' => 'K19',
+                'MERCHANT_COUNTRY' => 'ID',
+                'QRIS_MERCHANT_DOMESTIC_ID' => $id_domestic,
+                'TYPE_QR' => 'STATIS',
+                'MERCHANT_NAME' => $request->merchant,
+                'MERCHANT_CITY' => $request->city,
+                'POSTAL_CODE' => $request->postalcode,
+                'MERCHANT_CURRENCY_CODE' => '360',
+                'MERCHANT_TYPE' => $request->mcc,
+                'MERCHANT_EXP' => '900',
+                'MERCHANT_CODE' => genID(5, true),
+                'MERCHANT_ADDRESS' => $request->address,
+                'STATUS' => '1',
+                'NMID' => $nmid
+            ];
 
-        return redirect()->route('merchant.index')
-            ->with('success', 'Merchant created successfully.');
+            $merchant_id = Merchant::create($data_merchant)->id;
+
+            $data_detail = [
+                'MERCHANT_ID' => $merchant_id,
+                'DOMAIN' => $domain,
+                'TAG' => '26',
+                'MPAN' => $request->norek,
+                'MID' => $nmid,
+                'CRITERIA' => $request->criteria
+            ];
+            $merchant_detail = MerchantDetails::create($data_detail);
+            
+            return redirect()->route('merchant.index')->with(['msg' => 'Merchant created successfully.']);
+        } catch (\Throwable $th) {
+            return back()->withErrors(['msg' => 'Merchant created failed. ('.$th->getMessage().')']);
+        }
     }
 
     /**

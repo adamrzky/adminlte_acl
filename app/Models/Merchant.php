@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 class Merchant extends Model
 {
     // protected $connection = 'mysql2';
-    // protected $table = 'QRIS_MERCHANT';
-    protected $table = 'qris_merchant_2';
+    protected $table = 'QRIS_MERCHANT';
+    // protected $table = 'qris_merchant_2';
     public $timestamps = false;
     
    
@@ -34,12 +34,11 @@ class Merchant extends Model
         'POSTAL_CODE',
         'MERCHANT_CURRENCY_CODE',
         'MERCHANT_TYPE',
-        'MERCHANT_ID',
-        'REKENING_NUMBER',
-        'CATEGORY',
-        'CRITERIA',
+        'MERCHANT_EXP',
+        'MERCHANT_CODE',
+        'MERCHANT_ADDRESS',
         'STATUS',
-        'MERCHANT_ADDRESS'
+        'NMID'
     ];
     
 }
