@@ -25,10 +25,28 @@ class QrisController extends Controller
         return view('qris.index');
     }
 
-    public function hit(Request $request)
+    public function hit (Request $request)
     {
+
+        // dd($request['qrType']);
         // Log::channel('weblog')->info('req : ' . $request);
-        $data = $request->toArray();
+        $data = [
+            "qrType" =>  $request['qrType'],
+            "param" => [
+                "MPI" => [
+                    "MERCHANT_ID" =>  $request['MERCHANT_ID'],
+                    "AMOUNT" =>  $request['AMOUNT'],
+                    "TIP_INDICATOR" =>  $request['TIP_INDICATOR'],
+                    "FEE_AMOUNT" =>  $request['FEE_AMOUNT'],
+                    "FEE_AMOUNT_PERCENTAGE" =>  $request['FEE_AMOUNT_PERCENTAGE'],
+                        ]
+                      ]
+                ];
+                
+        Log::channel('weblog')->info('REQ SEND : ' .  json_encode($data));
+            
+
+        // dd($data['param']);
 
         $token = Http::timeout(5)->withHeaders([
             'Content-Type' => 'application/json',
@@ -40,7 +58,8 @@ class QrisController extends Controller
                 "password" => "123456"
             ]
         );
-        dd($token->json());
+        $resptoken = $token->json();
+        // dd($resptoken['access_token']);
 
         // $response = Http::withHeaders([
         //     'Content-Type' => 'application/json',
@@ -59,19 +78,29 @@ class QrisController extends Controller
 
         // dd($response);
 
-        $response = Http::timeout(10)->withHeaders([
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiN2EyODkzM2VjZWFjYmJhNTBkYzM2YzQ5NGY2YzNhMDcwN2Q0OGQ5NDE5ZGVhYWRmZWU4NzFhMDkwYzdiMDFjMWQ2ZGYyY2E0OGMyZjQ0NjciLCJpYXQiOjE2NzM0MDg2NTYsIm5iZiI6MTY3MzQwODY1NiwiZXhwIjoxNjczNDEyMjU2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.aBWwDQdpnWOvzKgAgGswD6p7ND1KlCSHRbGLzVoE164TDt-TFaT2tBzjJQuTrYCBFiNZU-UuwA1Mvtv3iDmv77vc6x1k3g9qp2ABlN2uzTVJ93TKvxVG3JDsrDQHrDd1RQfzMFHAPUSltrPGZJASolq5HnzwdBDk04z9-BqI3TgDHmKsubHH31tPCww1B-rvQIeEMe6DUYAnPB1TIP4KWG8ZkBO4UtIf97Nw05tESz-b7d8Q62-eKceLJS4VJ--m2_6jK9pK9iGPNU2KmfCbtVvi13zCfuEnfiGAQl7_-4ynU4Z2WCTUeal-aL6f6DS_R4tk7Vjw_zBuWF2wFoV1aMAl2lUs8T8copXvhQbskbNdoCdXj1_ZLf_gF8VFvZ8ECnhTx1mZfQqW26jfLtpDBeLYht4X5lIpjdlvgSQ_TizMILQdGRm1W6uTh7o-UxHsdfBoaVtenfLjOHC6caPCunZBjBL4LnGtBkWt91RHoFGEnJjX8ot4dVAaqlNNwBl3Vk4wTIU54j1BewMRhH4PMjJrJMnZgtDxORHdTXd-7UUWwDZATlwUzfnMwb0bz0U4OIaSKnHoWoPzfVZHgXjUZ6pPutiFMgqoGoRzlk_kikDBwLHFmPh3Z8hEyryydanoaUxaL5KoGNDdvxBUv-8jwUSmPUTRymTbNGEbWvndwLE',
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' .$resptoken['access_token'] ,
             'Content-Type' => 'application/json',
         ])->post(
             'http://127.0.0.1:8000/api/qris',
             $data
         );
-        dd($response->json());
+
+        
+        // dd($data['AMOUNT']);
 
         // Log::channel('weblog')->info('resp : ' . $response);
+        //  dd($response['MPO']['QR']);
 
+        // return response()([
+        //     'qr'    => $response['MPO']['QR'],
+        // ]);
+        // dd($response['MPO']['QR']);
+        
         return response()->json([
-            'data'    => $response,
+            'qr'    => $response['MPO']['QR'],
+            // 'qr' => $base64,
+    
         ]);
     }
 
@@ -84,8 +113,6 @@ class QrisController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-
-
 
 
 
