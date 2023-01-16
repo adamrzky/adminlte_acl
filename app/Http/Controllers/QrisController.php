@@ -34,12 +34,13 @@ class QrisController extends Controller
             'Content-Type' => 'application/json',
             'Access-Control-Allow-Origin' => '*',
         ])->post(
-            route('gettoken'),
+            'http://127.0.0.1:8000/api/gettoken',
             [
                 "email" => "admin@gmail.com",
                 "password" => "123456"
             ]
         );
+        dd($token->json());
 
         // $response = Http::withHeaders([
         //     'Content-Type' => 'application/json',
