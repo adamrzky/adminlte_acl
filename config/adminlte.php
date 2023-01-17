@@ -336,15 +336,16 @@ return [
             'label_color' => 'success',
         ],
         // ['header' => 'test'],
-        [
-            'text' => 'Test QRIS',
-            'url'  => 'qris',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
+       
         [
             'text' => 'Create Merchant',
             'url'  => 'merchant',
             'icon' => 'fas fa-fw fa-share',
+        ],
+        [
+            'text' => 'Generate QRIS',
+            'url'  => 'qris',
+            'icon' => 'fas fa-fw fa-lock',
         ],
         // [
         //     'text' => 'change_password',

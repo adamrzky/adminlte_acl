@@ -43,6 +43,46 @@ function getCriteria()
     return $criteria;
 }
 
+function getQrtype()
+{
+    $qrType = [
+        [
+            'id' => '1',
+            'desc' => 'QRIS Statis'
+        ],
+        [
+            'id' => '2',
+            'desc' => 'QRIS Dinamis'
+        ],
+        [
+            'id' => '3',
+            'desc' => 'QRIS Statis With Amount'
+        ],
+        [
+            'id' => '5',
+            'desc' => 'QRIS Statis With Multiple Acquirer'
+        ],
+        [
+            'id' => '6',
+            'desc' => 'QRIS Dinamis Wtihout Amount'
+        ],
+        [
+            'id' => '7',
+            'desc' => 'Usaha Besar'
+        ],
+        [
+            'id' => '8',
+            'desc' => 'Usaha Besar'
+        ],
+        [
+            'id' => '9',
+            'desc' => 'Usaha Besar'
+        ]
+    ];
+
+    return $qrType;
+}
+
 function getWilayah($prov = '', $negara = 'ID')
 {
     $url = 'http://192.168.26.26:10002/api.php?negara=' . $negara . '&prov=' . $prov;

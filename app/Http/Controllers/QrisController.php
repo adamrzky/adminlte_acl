@@ -11,6 +11,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Intervention\Image\ImageManager;
 use Image;
 use Illuminate\Support\Facades\Route;
+use App\Models\Merchant;
 
 class QrisController extends Controller
 {
@@ -21,8 +22,14 @@ class QrisController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('qris.index');
+    {   
+       
+        $merchant = Merchant::orderBy('ID')->get()->toArray();
+
+        // dd($merchant);
+
+        $qrType = getQrtype();
+        return view('qris.index', compact('qrType', 'merchant'));
     }
 
     public function hit (Request $request)

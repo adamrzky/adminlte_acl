@@ -2,27 +2,9 @@
 
 @section('title', 'Dashboard')
 
-
-@section('css')
-<!-- <link rel="stylesheet" href="/css/admin_custom.css"> -->
-@stop
-
-@section('js')
-<script>
-    // console.log('Hi!');
-</script>
-@stop
-
-
 @section('content')
-<!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
-<meta name="csrf-token" content="{{ csrf_token() }}">
-
 <!-- Script -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 <style type="text/css">
     .left {
         text-align: left;
@@ -41,49 +23,75 @@
     }
 </style>
 
-{{-- @if(!empty(Session::get('error_code')) && Session::get('error_code') == 5)
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>Generate QRIS </h1>
+			</div>
+		</div>
+	</div>
+</section>
+
+@if(!empty(Session::get('error_code')) && Session::get('error_code') == 5)
 <script>
 $(function() {
     $('#modalQr').modal('modalQr');
 });
 </script>
-@endif --}}
+@endif
 
 
-<form action="{{ route('qris.hit') }}" method="POST">
-    @csrf
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>QR Type :</strong>
-                <input type="number" id="qrType"  class="form-control col-3" value="1">
-            </div>
-            <div class="form-group">
-                <strong>MERCHANT_ID:</strong>
-                <input type="number" id="MERCHANT_ID" class="form-control col-3" value="1">
-            </div>
-            <div class="form-group">
-                <strong>AMOUNT:</strong>
-                <input type="number" id="AMOUNT" class="form-control col-3" value="1">
-            </div>
-            <div class="form-group">
-                <strong>TIP_INDICATOR:</strong>
-                <input type="number" id="TIP_INDICATOR" class="form-control col-3">
-            </div>
-            <div class="form-group">
-                <strong>FEE_AMOUNT:</strong>
-                <input type="number" id="FEE_AMOUNT" class="form-control col-3">
-            </div>
-            <div class="form-group">
-                <strong>FEE_AMOUNT_PERCENTAGE:</strong>
-                <input type="number" id="FEE_AMOUNT_PERCENTAGE" class="form-control col-3">
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="button" class="btn btn-primary" id="store">Submit</button>
-        </div>
-    </div>
-</form>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card card-default">
+			<form action="{{ route('qris.hit') }}" method="POST">
+				@csrf
+				<div class="card-body">
+					<div class="row">
+                        <div class="form-group col-6">
+                            <label>QR Type :</label>
+                            <select class="form-control" name="qrType" id="qrType" required>
+                                @foreach ($qrType as $dropdown)
+                                    <option value="{{ $dropdown['id'] }}"> {{ $dropdown['id'] }}  -  {{ $dropdown['desc'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Merchant Code:</label>
+                            <select class="form-control" name="MERCHANT_ID" id="MERCHANT_ID" required>
+                                @foreach ($merchant as $dropdown)
+                                  <option value="{{ $dropdown['ID'] }}"> {{ $dropdown['MERCHANT_CODE'] }}  -  {{ $dropdown['MERCHANT_NAME'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>AMOUNT:</label>
+                            <input type="number" id="AMOUNT" class="form-control" value="1">
+                        </div>
+                        <div class="form-group col-6">
+                            <label>TIP_INDICATOR:</label>
+                            <input type="number" id="TIP_INDICATOR" class="form-control">
+                        </div>
+                        <div class="form-group col-6">
+                            <label>FEE_AMOUNT:</label>
+                            <input type="number" id="FEE_AMOUNT" class="form-control">
+                        </div>
+                        <div class="form-group col-6">
+                            <label>FEE_AMOUNT_PERCENTAGE:</label>
+                            <input type="number" id="FEE_AMOUNT_PERCENTAGE" class="form-control">
+                        </div>
+                    </div>
+						
+					</div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 text-center card-footer">
+                        <button type="button" class="btn btn-success" id="store">Submit</button>
+                    </div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 <div class="modal" id="modalQr" tabindex="-1">
     <div class="modal-dialog">
