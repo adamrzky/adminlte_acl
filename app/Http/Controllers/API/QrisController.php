@@ -170,7 +170,11 @@ class QrisController extends Controller
             }
         } catch (\Throwable $th) {
             Log::channel('apilog')->info('RESP SEND API : ' . $th->getMessage());
-            Log::channel('apilog')->info('RESP : ' . $th->getMessage());
+            $res = [
+                'RC' => '0005',
+                'RM' => $th->getMessage()
+            ];
+            Log::channel('apilog')->info('RESP : ' . json_encode($res));
         }
 
         return response()->json($res);
@@ -206,10 +210,6 @@ class QrisController extends Controller
 
     public function hit(Request $request)
     {
-        // dd($request);
-
-        // Log::channel('weblog')->info('req : ' . $request);
-        // dd($request->all());
         switch ($request->qrType) {
             case '1':
                 $data = [
@@ -303,16 +303,12 @@ class QrisController extends Controller
                 break;
         }
 
-        // dd($data);
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->post(
             'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
             $data
         );
-
-
-        // dd($data);
 
         Log::channel('weblog')->info('resp api : ' . $response);
 
@@ -345,7 +341,6 @@ class QrisController extends Controller
 
 
         $base64 = base64_encode($canvas);
-        // dd($base64);
 
         return response()->json([
             'data'    => $response['MPO']['QRIS'],
