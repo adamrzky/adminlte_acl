@@ -9,9 +9,12 @@ use App\Models\MerchantDomestic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
+use App\Traits\Common;
 
 class MerchantController extends Controller
 {
+    use Common;
+    
     /**
      * Display a listing of the resource.
      *
@@ -67,6 +70,11 @@ class MerchantController extends Controller
             'postalcode' => 'required',
             'fee' => 'required',
         ]);
+
+        $cek = $this->cekNorek($request->norek);
+        if ($cek['rc'] != '0000') {
+            return back()->withErrors(['msg' => 'Merchant created failed. (Invalid Account Number [No Rekening])']);
+        }
 
         try {
             $date = date('Y-m-d H:i:s');
@@ -129,8 +137,6 @@ class MerchantController extends Controller
         $merchant = Merchant::where('id', $id)->first();
         return view('merchant.show', compact('merchant'));
     }
-
-
 
     /**
      * Show the form for editing the specified resource.

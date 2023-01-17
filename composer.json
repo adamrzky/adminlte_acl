@@ -49,7 +49,9 @@
             "database/factories"
         ],
         "files": [
-            "app/helpers.php"
+            "app/helpers.php",
+            "vendor/iso/c8583.php",
+            "vendor/iso/protocol-generic.php"
         ]
     },
     "autoload-dev": {

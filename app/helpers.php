@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 function genID($len = 13, $alfanumeric = false)
 {
@@ -48,4 +49,85 @@ function getWilayah($prov = '', $negara = 'ID')
     $response = Http::get($url);
 
     return $response->json();
+}
+
+function traceLog($pMessage)
+{
+    Log::debug($pMessage);
+    Log::channel('daily')->debug($pMessage);
+}
+
+function sendAPI($pUrl, $pData)
+{
+    $tStringData = json_encode($pData);
+    traceLog("API Request to {$pUrl} : {$tStringData}");
+
+    $tMethod = 'POST';
+    $requestBody = str_replace(array(" ", "\n", "\t", "\r"), array("", "", "", ""), $tStringData);
+    $tCurl = curl_init($pUrl);
+    curl_setopt($tCurl, CURLOPT_CUSTOMREQUEST, $tMethod);
+    curl_setopt($tCurl, CURLOPT_POSTFIELDS, $tStringData);
+    curl_setopt($tCurl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt(
+        $tCurl,
+        CURLOPT_HTTPHEADER,
+        array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($tStringData),
+        )
+    );
+    sleep(0.5);
+    $tResult = curl_exec($tCurl);
+    curl_close($tCurl);
+
+    traceLog("API Response from {$pUrl} : {$tResult}");
+
+    return json_decode($tResult, true);
+}
+
+function sendSocket($address, $port, $out)
+{
+    traceLog("[sendSocket] start with address {$address}, port {$port}, and out {$out}");
+
+    $timeout = 1000;
+    $s = '';
+    $bTimeout = 0;
+
+    $fp = fsockopen($address, $port, $errno, $errstr, $timeout);
+
+    if (!$fp) {
+        $bTimeout = 999;
+    } else {
+        //$n = fwrite($fp, GetLengthByte(strlen($out)), 2); //byte order
+        $n = fwrite($fp, $out, strlen($out));
+        $n = fwrite($fp, chr(-1));
+        @stream_set_timeout($fp, $timeout);
+
+        $c = '';
+        $bDone = false;
+        $bHead = false;
+        $lenCount = 0;
+        $i = 0;
+        while ((!feof($fp)) && ($bTimeout == 0) && (!$bDone)) {
+            $info = @stream_get_meta_data($fp);
+            if ($info['timed_out']) {
+                $bTimeout = 1;
+            }
+
+            if ($bTimeout == 0) {
+                $c = fread($fp, 1);
+                if ($c != chr(-1)) {
+                    $s .= $c;
+                } else {
+                    $bDone = true;
+                }
+            } // end of !$bTimeout
+        }
+
+        fclose($fp);
+    }
+    $sResp = $s;
+
+    traceLog("[sendSocket] end with result {$sResp}");
+    return $sResp;
 }
