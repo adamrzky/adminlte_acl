@@ -67,7 +67,7 @@ $(function() {
                         </div>
                         <div class="form-group col-6">
                             <label>AMOUNT:</label>
-                            <input type="number" id="AMOUNT" class="form-control" value="1">
+                            <input type="number" id="AMOUNT" name="AMOUNT" class="form-control" value="1">
                         </div>
                         <div class="form-group col-6">
                             <label>TIP_INDICATOR:</label>
@@ -86,6 +86,7 @@ $(function() {
 					</div>
                     <div class="col-xs-12 col-sm-12 col-md-12 text-center card-footer">
                         <button type="button" class="btn btn-success" id="store">Submit</button>
+                        {{-- <button type="submit" class="btn btn-danger">Submit</button> --}}
                     </div>
 				</div>
 			</form>
@@ -104,6 +105,10 @@ $(function() {
             </div>
             <div class="modal-body">
                 <div id="previewQr"></div>
+                <br>
+                <div>
+                    <h5 id="errorResp"> </h5>
+                </div>
             </div>
         </div>
     </div>
@@ -145,13 +150,14 @@ $(function() {
                 "_token": token
             },
             success: function(response) {
+                
                 // console.log(response.qr);
                 // console.log(response.qr);
                 // $("#response").html(response);
                 $("#modalQr").modal('show');
                 // $('#modal-body-isi').html(response.qr);
                 $('#previewQr').html(`<img src="data:image/png;base64,` + response.qr + `" \>`);
-
+                $('#errorResp').html(JSON.stringify(response.error));
                 //show success message
                 // Swal.fire({
                 //     type: 'success',
@@ -166,26 +172,28 @@ $(function() {
                 // $('#modal-create').modal('hide');
             },
             error: function(error) {
-                console.log(error)
-                //     if(error.response.qr[0]) {
+                // console.log(error)
 
-                //         //show alert
-                //         $('#alert-title').removeClass('d-none');
-                //         $('#alert-title').addClass('d-block');
 
-                //         //add message to alert
-                //         $('#alert-title').html(error.responseJSON.title[0]);
-                //     } 
+                    // if(error.response.qr[0]) {
+                    $("#modalQr").modal('show');
+                    //     //show alert
+                    //     $('#alert-title').removeClass('d-none');
+                    //     $('#alert-title').addClass('d-block');
 
-                //     if(error.responseJSON.content[0]) {
+                    //     //add message to alert
+                    //     $('#alert-title').html(error.responseJSON.title[0]);
+                    // } 
 
-                //         //show alert
-                //         $('#alert-content').removeClass('d-none');
-                //         $('#alert-content').addClass('d-block');
+                    // if(error.responseJSON.content[0]) {
 
-                //         //add message to alert
-                //         $('#alert-content').html(error.responseJSON.content[0]);
-                //     } 
+                    //     //show alert
+                    //     $('#alert-content').removeClass('d-none');
+                    //     $('#alert-content').addClass('d-block');
+
+                    //     //add message to alert
+                    //     $('#alert-content').html(error.responseJSON.content[0]);
+                    // } 
 
             }
 

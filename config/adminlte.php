@@ -347,6 +347,11 @@ return [
             'url'  => 'qris',
             'icon' => 'fas fa-fw fa-lock',
         ],
+        [
+            'text' => 'Refund',
+            'url'  => 'refund',
+            'icon' => 'fas fa-fw fa-check',
+        ],
         // [
         //     'text' => 'change_password',
         //     'url'  => 'admin/settings',

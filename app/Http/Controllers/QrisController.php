@@ -102,13 +102,21 @@ class QrisController extends Controller
         // return response()([
         //     'qr'    => $response['MPO']['QR'],
         // ]);
-        // dd($response['MPO']['QR']);
-        
+        $res = $response['RC'];
+        $error = ( $response != '0000' );
+        if ($res != '0000') {
+        }
+        try {
+
+            return response()->json([
+                'qr'    => $response['MPO']['QR'],
+            ]);
+        } catch (\Throwable $th) {
+
         return response()->json([
-            'qr'    => $response['MPO']['QR'],
-            // 'qr' => $base64,
-    
+            'error'    => ' Qris Generated Failed ',
         ]);
+     }
     }
 
 

@@ -65,9 +65,14 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/permissions/store', 'PermissionController@store')->name('permissions.store');
     Route::delete('/permissions/{permission}/destroy', 'PermissionController@destroy')->name('permissions.destroy');
 
-    //Generate QRIS
+    // QRIS
     Route::get('/qris', 'QrisController@index')->name('qris.index');
     Route::post('/qris/hit', 'QrisController@hit')->name('qris.hit');
+    
+    //Refund
+    
+    Route::get('/refund', 'RefundController@index')->name('refund.index');
+    Route::post('/refund/hit', 'RefundController@hit')->name('refund.hit');
 
     //Merchant
     Route::get('/merchant', 'MerchantController@index')->name('merchant.index');
