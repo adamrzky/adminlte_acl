@@ -67,7 +67,7 @@ $(function() {
                         </div>
                         <div class="form-group col-6">
                             <label>AMOUNT:</label>
-                            <input type="number" id="AMOUNT" name="AMOUNT" class="form-control" value="1">
+                            <input type="number" id="AMOUNT" name="AMOUNT" class="form-control" >
                         </div>
                         <div class="form-group col-6">
                             <label>TIP_INDICATOR:</label>

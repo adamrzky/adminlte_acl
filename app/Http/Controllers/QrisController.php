@@ -114,7 +114,7 @@ class QrisController extends Controller
         } catch (\Throwable $th) {
 
         return response()->json([
-            'error'    => ' Qris Generated Failed ',
+            'error'    => ' Failed To Generate QR Code ',
         ]);
      }
     }

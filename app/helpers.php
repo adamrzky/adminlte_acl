@@ -48,7 +48,7 @@ function getQrtype()
     $qrType = [
         [
             'id' => '1',
-            'desc' => 'QRIS Statis'
+            'desc' => 'QRIS Static'
         ],
         [
             'id' => '2',
@@ -56,27 +56,31 @@ function getQrtype()
         ],
         [
             'id' => '3',
-            'desc' => 'QRIS Statis With Amount'
+            'desc' => 'QRIS Dinamic With Amount'
+        ],
+        [
+            'id' => '4',
+            'desc' => 'QRIS Static With Multiple Acquirer'
         ],
         [
             'id' => '5',
-            'desc' => 'QRIS Statis With Multiple Acquirer'
+            'desc' => 'QRIS Dinamic Without Amount'
         ],
         [
             'id' => '6',
-            'desc' => 'QRIS Dinamis Wtihout Amount'
+            'desc' => 'QRIS Dinamic With Amount'
         ],
         [
             'id' => '7',
-            'desc' => 'Usaha Besar'
+            'desc' => 'QR Static With Tip'
         ],
         [
             'id' => '8',
-            'desc' => 'Usaha Besar'
+            'desc' => 'QR Static With Tip'
         ],
         [
             'id' => '9',
-            'desc' => 'Usaha Besar'
+            'desc' => 'QR Static With % Tip '
         ]
     ];
 
