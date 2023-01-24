@@ -82,4 +82,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::put('/merchant/update/{merchant}', 'MerchantController@update')->name('merchant.update');
     Route::post('/merchant/store', 'MerchantController@store')->name('merchant.store');
     Route::delete('/merchant/{merchant}/destroy', 'MerchantController@destroy')->name('merchant.destroy');
+
+    //transaction
+    Route::get('/transaction', 'TransactionController@index')->name('transactions.index');
+    Route::get('/transaction/get', 'TransactionController@data')->name('transactions.data');
+    // Route::get('/transaction', [TransactionController::class, 'index']);
+
 });

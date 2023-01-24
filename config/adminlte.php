@@ -352,6 +352,11 @@ return [
             'url'  => 'refund',
             'icon' => 'fas fa-fw fa-check',
         ],
+        [
+            'text' => 'Transaction',
+            'url'  => 'transaction',
+            'icon' => 'fas fa-fw fa-list',
+        ],
         // [
         //     'text' => 'change_password',
         //     'url'  => 'admin/settings',
