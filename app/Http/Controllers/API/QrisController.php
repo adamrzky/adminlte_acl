@@ -160,7 +160,8 @@ class QrisController extends Controller
                 $canvas->save('images/hasil.png');
 
                 $base64 = base64_encode($canvas);
-                // $detail = $this->parsingQrCodeASPI($qris);
+                $detail = $this->parsingQrCodeASPI($qris);
+                $res['MPO']['DETAIL'] = $detail;
                 $res['MPO']['QR'] = $base64;
 
                 Log::channel('apilog')->info('RESP : ' . json_encode($res));
