@@ -355,7 +355,7 @@ return [
         [
             'text' => 'Transaction',
             'url'  => 'transaction',
-            'icon' => 'fas fa-fw fa-list',
+            'icon' => 'fa fa-fw fa-list',
         ],
         // [
         //     'text' => 'change_password',
