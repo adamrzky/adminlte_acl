@@ -38,9 +38,9 @@ class TransactionController extends Controller
         return view('transactions.index');
     }
 
-    public function data(Request $request)
+    public function data()
     {
-        $data = Transaction::All();
+        $data = Transaction::latest();
         return DataTables::of($data)->make(true);
     }
 }
