@@ -38,9 +38,39 @@ class TransactionController extends Controller
         return view('transactions.index');
     }
 
-    public function data()
+    public function data(Request $request)
     {
+        if ($request->ajax()) {
         $data = Transaction::latest();
-        return DataTables::of($data)->make(true);
+        
+        return DataTables::of($data)
+        ->toJson();
     }
 }
+    public function data2(Request $request)
+    {
+
+        
+        $searchValue = $request['search']['value']; // Search value
+        $searchByAmount = $request['searchByAmount'];
+        $searchByStatus = $request['searchByStatus'];
+        ## Search 
+            $searchQuery = " ";
+            if($searchByAmount != ''){
+               $searchQuery .= " and (emp_name like '%".$searchByAmount."%' ) ";
+            }
+            if($searchByStatus != ''){
+               $searchQuery .= " and (gender='".$searchByStatus."') ";
+            }
+            if($searchValue != ''){
+               $searchQuery .= " and (emp_name like '%".$searchValue."%' or 
+                  email like '%".$searchValue."%' or 
+                  city like'%".$searchValue."%' ) ";
+            }
+
+
+
+
+    }
+ }
+

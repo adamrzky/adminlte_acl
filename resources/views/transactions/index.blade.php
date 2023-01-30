@@ -5,6 +5,8 @@
 @section('css')
 <!-- <link rel="stylesheet" href="/css/admin_custom.css"> -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+<!-- jQuery Library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 @stop
 
 
@@ -21,6 +23,38 @@
       </div>
    </div>
 </section>
+
+<!-- HTML -->
+{{-- <div> --}}
+     <!-- Filters -->
+     {{-- <div class="ui-bordered px-4 pt-4 mb-4">
+      <div class="form-row">
+          <div class="col-md-4 mb-3">
+              <div class="form-group">
+                  <label class="form-label">Amount</label>
+                  <input class="form-control" type="text" name="searchByAmount" id="searchByAmount">
+              </div>
+          </div>
+          <div class="col-md-4 mb-3">
+              <div class="form-group">
+                  <label class="form-label">Amount</label>
+                  <input  type="text" name="toko" id="toko">
+                  <select  class="form-control" id='searchByStatus'>
+                     <option value=''>-- Status Transfer --</option>
+                     <option value='0'>Belum Bayar</option>
+                     <option value='1'>Bayar</option>
+                     <option value='2'>Refund</option>
+                   </select>
+              </div>
+          </div>
+       		
+          <div class="col-md col-xl-2 mb-2">
+              <label class="form-label d-none d-md-block">&nbsp;</label>
+              <button type="button" class="btn btn-secondary btn-block" id="search"><i class="fa fa-search"></i> Cari</button>
+          </div>
+      </div>
+  </div> --}}
+  <!-- / Filters -->
 
 <div class="card-body">
    <table id="tbl_list" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -59,11 +93,24 @@
 @section('js')
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
+      $('#searchByAmount').keyup(function(){
+         DataTable();
+      });
+      
+      $('#searchByStatus').change(function(){
+         DataTable();
+      });
    $(document).ready(function() {
       $('#tbl_list').DataTable({
          processing: true,
          serverSide: true,
-         ajax: "{{ route('transactions.data') }}",
+         ajax: {
+
+         url: "{{ route('transactions.data') }}",
+
+       
+        },
+
          columns: [{
                render: function(data, type, row, meta) {
                   return meta.row + meta.settings._iDisplayStart + 1;
@@ -127,6 +174,8 @@
             // }
          ],
       });
+     
    });
+
 </script>
 @endsection
