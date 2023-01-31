@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
@@ -13,10 +12,8 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Intervention\Image\ImageManager;
 use Image;
 
-
 class QrisController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -37,97 +34,107 @@ class QrisController extends Controller
     {
         Log::channel('apilog')->info('==============================');
         Log::channel('apilog')->info('REQ : ' . json_encode($request->all()));
+        $mpi = [];
 
-        switch ($request->qrType) {
-            case '1':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT']
-                    ]
-                ];
-                break;
-            case '2':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT']
-                    ]
-                ];
-                break;
-            case '3':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT']
-                    ]
-                ];
-                break;
-            case '4':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT']
-                    ]
-                ];
-                break;
-            case '5':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT']
-                    ]
-                ];
-                break;
-            case '6':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT']
-                    ]
-                ];
-                break;
-            case '7':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT'],
-                        "TIP_INDICATOR" => $request->param['MPI']['TIP_INDICATOR']
-                    ]
-                ];
-                break;
-            case '8':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT'],
-                        "FEE_AMOUNT" => $request->param['MPI']['FEE_AMOUNT']
-                    ]
-                ];
-                break;
-            case '9':
-                $data = [
-                    "MPI" => [
-                        "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
-                        "AMOUNT" => $request->param['MPI']['AMOUNT'],
-                        "FEE_AMOUNT_PERCENTAGE" => $request->param['MPI']['FEE_AMOUNT_PERCENTAGE']
-                    ]
-                ];
-                break;
-            default:
-                $data = [];
-                break;
+        foreach ($request->param['MPI'] as $key => $value) {
+            if (!is_null($value)) {
+                $mpi[$key] = $value;
+            }
         }
 
-        Log::channel('apilog')->info('REQ SEND API : ' .  json_encode($data));
+        //   dd($mpi);
+
+        $data = [
+            'MPI' => $mpi,
+        ];
+
+        // switch ($request->qrType) {
+        //     case '1':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT']
+        //             ]
+        //         ];
+        //         break;
+        //     case '2':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT']
+        //             ]
+        //         ];
+        //         break;
+        //     case '3':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT']
+        //             ]
+        //         ];
+        //         break;
+        //     case '4':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT']
+        //             ]
+        //         ];
+        //         break;
+        //     case '5':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT']
+        //             ]
+        //         ];
+        //         break;
+        //     case '6':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT']
+        //             ]
+        //         ];
+        //         break;
+        //     case '7':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT'],
+        //                 "TIP_INDICATOR" => $request->param['MPI']['TIP_INDICATOR']
+        //             ]
+        //         ];
+        //         break;
+        //     case '8':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT'],
+        //                 "FEE_AMOUNT" => $request->param['MPI']['FEE_AMOUNT']
+        //             ]
+        //         ];
+        //         break;
+        //     case '9':
+        //         $data = [
+        //             "MPI" => [
+        //                 "MERCHANT_ID" => $request->param['MPI']['MERCHANT_ID'],
+        //                 "AMOUNT" => $request->param['MPI']['AMOUNT'],
+        //                 "FEE_AMOUNT_PERCENTAGE" => $request->param['MPI']['FEE_AMOUNT_PERCENTAGE']
+        //             ]
+        //         ];
+        //         break;
+        //     default:
+        //         $data = [];
+        //         break;
+        // }
+
+        Log::channel('apilog')->info('REQ SEND API : ' . json_encode($data));
 
         try {
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
-            ])->post(
-                'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
-                $data
-            );
+            ])->post('http://192.168.26.75:9800/v1/api/aquerier/create/qr', $data);
 
             Log::channel('apilog')->info('RESP SEND API : ' . json_encode($response->json()));
 
@@ -136,7 +143,11 @@ class QrisController extends Controller
                 $qris = $res['MPO']['QRIS'];
                 $nmid = $res['MPO']['NMID'];
                 // $qrcode = QrCode::size(400)->generate($qris);
-                $qrcode = base64_encode(QrCode::format('png')->size(200)->generate($qris));
+                $qrcode = base64_encode(
+                    QrCode::format('png')
+                        ->size(200)
+                        ->generate($qris),
+                );
 
                 //qrispng
                 $wmQris = Image::make('images/qris.png');
@@ -173,7 +184,7 @@ class QrisController extends Controller
             Log::channel('apilog')->info('RESP SEND API : ' . $th->getMessage());
             $res = [
                 'RC' => '0005',
-                'RM' => $th->getMessage()
+                'RM' => $th->getMessage(),
             ];
             Log::channel('apilog')->info('RESP : ' . json_encode($res));
         }
@@ -208,145 +219,4 @@ class QrisController extends Controller
 
         return $tResult;
     }
-
-    // public function hit(Request $request)
-    // {
-    //     switch ($request->qrType) {
-    //         case '1':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT']
-    //                 ]
-    //             ];
-
-    //             break;
-
-    //         case '2':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT']
-    //                 ]
-    //             ];
-    //             break;
-
-    //         case '3':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT']
-    //                 ]
-    //             ];
-    //             break;
-
-    //         case '4':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT']
-    //                 ]
-    //             ];
-    //             break;
-
-    //         case '5':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT']
-    //                 ]
-    //             ];
-    //             break;
-
-    //         case '6':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT']
-    //                 ]
-    //             ];
-    //             break;
-
-    //         case '7':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT'],
-    //                     "TIP_INDICATOR" => $request['TIP_INDICATOR']
-    //                 ]
-    //             ];
-    //             break;
-
-    //         case '8':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT'],
-    //                     "FEE_AMOUNT" => $request['FEE_AMOUNT']
-    //                 ]
-    //             ];
-    //             break;
-
-    //         case '9':
-    //             $data = [
-    //                 "MPI" => [
-    //                     "MERCHANT_ID" => $request['MERCHANT_ID'],
-    //                     "AMOUNT" => $request['AMOUNT'],
-    //                     "FEE_AMOUNT_PERCENTAGE" => $request['FEE_AMOUNT_PERCENTAGE']
-    //                 ]
-    //             ];
-    //             break;
-
-
-
-    //         default:
-    //             $data = [];
-    //             break;
-    //     }
-
-    //     $response = Http::withHeaders([
-    //         'Content-Type' => 'application/json',
-    //     ])->post(
-    //         'http://192.168.26.75:9800/v1/api/aquerier/create/qr',
-    //         $data
-    //     );
-
-    //     Log::channel('weblog')->info('resp api : ' . $response);
-
-    //     $qris = ($response['MPO']['QRIS']);
-    //     $nmid = ($response['MPO']['NMID']);
-
-    //     //qrcode
-    //     $qrcode =  base64_encode(QrCode::format('png')->size(280)->generate($qris));
-
-    //     //qrispng
-    //     $wmQris = Image::make('images/qris.png');
-    //     $wmQris->resize(100, 50);
-
-    //     //getPngQRCode
-    //     $wmQrcode = Image::make($qrcode);
-    //     $wmQrcode->resize(100, 50);
-
-    //     //canvas
-    //     $canvas = Image::canvas(400, 400);
-
-    //     //insertToCanvas
-    //     $canvas->insert($wmQris, 'top');
-    //     $canvas->insert($qrcode, 'center');
-    //     $canvas->text('NMID : ' . $nmid, 100, 375, function ($font) {
-    //         $font->file(storage_path('font/font3.ttf'));
-    //         $font->size(15);
-    //     });
-
-    //     $canvas->save('images/hasil2.jpg');
-
-
-    //     $base64 = base64_encode($canvas);
-
-    //     return response()->json([
-    //         'data'    => $response['MPO']['QRIS'],
-    //         'qr' => $base64,
-
-    //     ]);
-    // }
 }
