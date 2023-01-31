@@ -79,6 +79,7 @@ class MerchantController extends Controller
         try {
             $date = date('Y-m-d H:i:s');
             $nmid = 'ID' . genID(13);
+            $nns = '93600521';
             $domain = 'ID.CO.QRIS.WWW';
             $data_domestic = [
                 'REVERSE_DOMAIN' => $domain,
@@ -113,7 +114,7 @@ class MerchantController extends Controller
                 'MERCHANT_ID' => $merchant_id,
                 'DOMAIN' => $domain,
                 'TAG' => '26',
-                'MPAN' => $request->norek,
+                'MPAN' => $nns.$request->norek,
                 'MID' => $nmid,
                 'CRITERIA' => $request->criteria
             ];
