@@ -26,13 +26,13 @@
             <p>{{ $message }}</p>
         </div>
     @endif
-{{-- @if ($message = Session::get('errors'))
+@if ($message = Session::get('errors'))
         <div class="alert alert-danger">
             <p>{{ $message }}</p>
         </div>
-@endif --}}
+@endif
 
-	@if ($errors->any())
+	{{-- @if ($errors->any())
 	<div class="alert alert-danger">
 		<label>Whoops!</label> There were some problems with your input.<br><br>
 		<ul>
@@ -41,7 +41,7 @@
 			@endforeach
 		</ul>
 	</div>
-	@endif
+	@endif --}}
 
 
 <div class="row">

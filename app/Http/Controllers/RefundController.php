@@ -9,9 +9,15 @@ use App\Models\Refund;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
+
 
 class RefundController extends Controller
 {
+    use AuthenticatesUsers;
 
     /**
      * Display a listing of the resource.
@@ -23,6 +29,9 @@ class RefundController extends Controller
         $data = Refund::get()->toArray();
 
         $amount = $data[0]['RETRIEVAL_REFERENCE_NUMBER'];
+
+        // $user = new AuthenticatesUsers();
+        // dd($user);
 
         // dd($amount);
         // dd($data);
@@ -53,7 +62,18 @@ class RefundController extends Controller
             
         ];
 
+        // dd($request->user());
+
+        // $request->validate([
+
+        //     $this->username() => 'required|string',
+        //     'password' => 'required|string',
+        // ]);
+
+        // dd($request);
+
         // dd($data);
+        $user = $request->user();
 
         $token = Http::timeout(5)->withHeaders([
             'Content-Type' => 'application/json',
@@ -61,8 +81,8 @@ class RefundController extends Controller
         ])->post(
             'http://127.0.0.1:8000/api/gettoken',
             [
-                "email" => "admin@gmail.com",
-                "password" => "123456"
+                "email" => $user->email,
+                "password" => '123456'
             ]
         );
         $resptoken = $token->json();
@@ -75,14 +95,42 @@ class RefundController extends Controller
             $data
         );
         
-        $res = $response->json();
+        // dd($response->json());
+        $res = $response['RC'];
+
+        // dd($res);
+        $error = ( $response != '0000' );
+        $errorMsg =  $response['RM'];
+        
+        if ($res != '0000') {
+
+            // dd($resp);
+        }
+        try {
+
+            return redirect()->route('refund.index')
+            ->with('errors', 'Refund Failed ' . ' => '  . json_encode($errorMsg)         );
+
+            
+            
+
+            // return response()->json([
+            //     'IN'    => $response['MPO']['INVOICE_NUMBER'],
+            // ]);
+        } catch (\Throwable $th) {
+
+            return redirect()->route('refund.index')
+            ->with('success','Refund successfully . Invoice Number : '  .  json_encode($res)  );
+     }
+
+
         // dd($res);
         // $invoiceNumber = 
 
         // dd($data);
         // dd($response->json());
-        return redirect()->route('refund.index')
-                        ->with('success','Refund successfully . Invoice Number : '  .  json_encode($res)  );
+        // return redirect()->route('refund.index')
+        //                 ->with('success','Refund successfully . Invoice Number : '  .  json_encode($res)  );
        
     }
 }

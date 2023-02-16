@@ -48,13 +48,13 @@ class RefundController extends Controller
                     $data
                 );
 
-                dd($response);
+                // dd($response);
 
                 $res = $response->json();
                 
                 
         Log::channel('apilog')->info('RESP API (REFUND) : ' .  json_encode($res));
         // dd($response->json());
-        return response()->json();
+        return response()->json($res);
     }
 }
